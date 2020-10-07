@@ -1,26 +1,64 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import "./App.css";
+import Auth from "./components/Authenticate";
+import AllPosts from "./components/guest/AllPosts";
+import Entrance from "./components/user/Entrance";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+/* class weschProvider extends React.Component {
+	state = {
+		token: undefined,
+	};
+	render() {
+		return (
+			<weschContext.Provider value={this.state}>
+				{this.props.children}
+			</weschContext.Provider>
+		);
+	}
 }
+*/
+export default class App extends React.Component {
+	weschContext = React.createContext(this.state);
+	state = {
+		coin: "",
+		currentuser: "",
+	};
 
-export default App;
+	setCoin = (newCoin: string | undefined) => {
+		this.setState({ coin: newCoin });
+	};
+
+	setCoinName = (name: string | undefined) => {
+		this.setState({ currentuser: name });
+	};
+
+	render() {
+		return (
+			<div className="ultimateContainer">
+				<this.weschContext.Provider value={this.state}>
+					<div className="App">
+						{this.state.coin === "" ? (
+							<div className="authenticate-maindiv">
+								<Auth
+									coin={this.state.coin}
+									setCoin={this.setCoin}
+									currentuser={this.state.currentuser}
+									setCoinName={this.setCoinName}
+								/>
+								<hr />
+								<AllPosts />
+							</div>
+						) : (
+							<Entrance
+								currentuser={this.state.currentuser}
+								setCoinName={this.setCoinName}
+								coin={this.state.coin}
+								setCoin={this.setCoin}
+							/>
+						)}
+					</div>
+				</this.weschContext.Provider>
+			</div>
+		);
+	}
+}

@@ -7,7 +7,9 @@ import {
 	Field,
 	FieldProps,
 } from "formik";
-import APIURL from "../../helpers/environment";
+import APIURL from "../../../helpers/environment";
+import Latest from "./Latest";
+import { Box } from "@material-ui/core";
 
 interface MyFormValues {
 	title: string;
@@ -15,6 +17,9 @@ interface MyFormValues {
 	privacy: boolean;
 }
 export interface postProps {
+	setCoin: (newCoin: string | undefined) => void;
+	setCoinName?: (name: string) => void;
+	currentuser?: string | undefined;
 	coin: string | undefined;
 }
 
@@ -34,8 +39,7 @@ export default class Post extends React.Component<any, postProps> {
 				private: privacy,
 			},
 		};
-
-		let result = await fetch(`${APIURL}/post/`, {
+		let result = await fetch(`${APIURL}/post`, {
 			method: "POST",
 			headers: new Headers({
 				"Content-Type": "application/json",
@@ -49,14 +53,12 @@ export default class Post extends React.Component<any, postProps> {
 
 	render() {
 		return (
-			<div>
+			<Box className="post-form-box">
 				<Formik
 					initialValues={this.initialValues}
 					onSubmit={(values, actions) => {
 						console.log({ values, actions });
 						this.postPost(values);
-						//alert(JSON.stringify(values, null, 2));
-						//actions.setSubmitting(false);
 					}}
 				>
 					<Form>
@@ -71,7 +73,13 @@ export default class Post extends React.Component<any, postProps> {
 						<button type="submit">Submit</button>
 					</Form>
 				</Formik>
-			</div>
+				<Latest
+					currentuser={this.props.currentuser}
+					setCoinName={this.props.setCoinName}
+					coin={this.props.coin}
+					setCoin={this.props.setCoin}
+				/>
+			</Box>
 		);
 	}
 }

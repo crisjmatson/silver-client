@@ -4,7 +4,9 @@ import * as React from "react";
 import APIURL from "../helpers/environment";
 
 interface authProps {
-	setCoin: (newCoin: string) => void;
+	setCoin: (newCoin: string | undefined) => void;
+	setCoinName: (name: string) => void;
+	currentuser: string | undefined;
 	coin: string | undefined;
 }
 interface authState {
@@ -46,7 +48,8 @@ export default class Authenticate extends React.Component<
 		if (response.ok === true) {
 			let json = await response.json();
 			this.props.setCoin(json.sessionToken);
-			console.log("sign in: ", "coin---", this.props.coin, json);
+			this.props.setCoinName(json.user.username);
+			console.log("sign in: ", json);
 		} else {
 			console.log("log in failed");
 		}
@@ -71,6 +74,7 @@ export default class Authenticate extends React.Component<
 		if (response.ok === true) {
 			let json = await response.json();
 			this.props.setCoin(json.sessionToken);
+			this.props.setCoinName(json.user.username);
 			console.log("sign up: ", this.props.coin, json);
 		} else {
 			console.log("sign up failed");
