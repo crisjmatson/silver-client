@@ -38,10 +38,15 @@ export default class DeleteAcct extends React.Component<DeleteProps> {
 			.then((response) => response.json())
 			.then((json) =>
 				json.message === "user deleted"
-					? this.props.setCoin(undefined)
+					? () => this.finalDelete()
 					: alert("Error deleting Account. please try again in a few moments.")
 			);
 	}
+
+	finalDelete = () => {
+		this.props.setCoin(undefined);
+		window.location.reload(false);
+	};
 
 	deleteToggleDelete() {
 		let opposite = this.props.delete;

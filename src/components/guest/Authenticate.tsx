@@ -1,15 +1,18 @@
 import { Button, FormGroup, TextField } from "@material-ui/core";
 import { Form, Formik } from "formik";
 import * as React from "react";
-import APIURL from "../helpers/environment";
+import APIURL from "../../helpers/environment";
+import AdminAuth from "./AdminAuth";
 
 interface authProps {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName: (name: string) => void;
+	setAdmin: (status: boolean) => void;
 	currentuser: string | undefined;
 	coin: string | undefined;
 }
 interface authState {
+	admin: boolean;
 	toggle: boolean;
 }
 interface authValues {
@@ -23,6 +26,7 @@ export default class Authenticate extends React.Component<
 	authState
 > {
 	state: authState = {
+		admin: false,
 		toggle: false,
 	};
 
@@ -81,66 +85,86 @@ export default class Authenticate extends React.Component<
 		}
 	};
 
+	closeAdmin = () => {
+		this.setState({ admin: false });
+	};
+
 	render() {
 		return (
 			<div>
-				<FormGroup>
-					<Formik
-						initialValues={{ email: "", username: "", password: "" }}
-						onSubmit={(values) => {
-							this.state.toggle
-								? this.signUpFetch(values)
-								: this.signInFetch(values);
-						}}
-					>
-						{({ values, handleChange, handleBlur }) => (
-							<Form>
-								{this.state.toggle ? (
+				<h1>{"App Title"}</h1>
+				{this.state.admin ? (
+					<AdminAuth
+						closeAdmin={this.closeAdmin}
+						coin={this.props.coin}
+						setCoin={this.props.setCoin}
+						currentuser={this.props.currentuser}
+						setCoinName={this.props.setCoinName}
+						setAdmin={this.props.setAdmin}
+					/>
+				) : (
+					<FormGroup>
+						<Formik
+							initialValues={{ email: "", username: "", password: "" }}
+							onSubmit={(values) => {
+								this.state.toggle
+									? this.signUpFetch(values)
+									: this.signInFetch(values);
+							}}
+						>
+							{({ values, handleChange, handleBlur }) => (
+								<Form>
+									{this.state.toggle ? (
+										<div>
+											<TextField
+												name="email"
+												placeholder="email"
+												value={values.email}
+												onChange={handleChange}
+												onBlur={handleBlur}
+											/>
+										</div>
+									) : (
+										<span></span>
+									)}
 									<div>
 										<TextField
-											name="email"
-											placeholder="email"
-											value={values.email}
+											name="username"
+											placeholder="username"
+											value={values.username}
 											onChange={handleChange}
 											onBlur={handleBlur}
 										/>
 									</div>
-								) : (
-									<span></span>
-								)}
-								<div>
-									<TextField
-										name="username"
-										placeholder="username"
-										value={values.username}
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
-								</div>
-								<div>
-									<TextField
-										name="password"
-										placeholder="password"
-										value={values.password}
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
-								</div>
-								<Button type="submit">
-									{this.state.toggle ? "--sign up--" : "--sign in--"}
-								</Button>
-								<br />
-								<br />
-								<br />
-								<br />
-								<Button onClick={() => this.toggleSign()}>
-									{this.state.toggle ? "back to signup" : "first time?"}
-								</Button>
-								{/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
-							</Form>
-						)}
-					</Formik>
-				</FormGroup>
+									<div>
+										<TextField
+											name="password"
+											placeholder="password"
+											value={values.password}
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+									</div>
+									<Button type="submit">
+										{this.state.toggle ? "--sign up--" : "--sign in--"}
+									</Button>
+									<br />
+									<br />
+									<br />
+									<br />
+									<Button onClick={() => this.toggleSign()}>
+										{this.state.toggle ? "back to sign in" : "first time?"}
+									</Button>
+									{"		"}
+									<Button onClick={() => this.setState({ admin: true })}>
+										ADMIN
+									</Button>
+									{/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+								</Form>
+							)}
+						</Formik>
+					</FormGroup>
+				)}
 			</div>
 		);
 	}

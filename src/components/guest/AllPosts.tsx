@@ -1,45 +1,35 @@
 import {
+	Accordion,
+	AccordionDetails,
+	AccordionSummary,
 	Button,
 	Card,
 	CardActions,
 	CardContent,
+	Container,
 	Typography,
+	List,
+	ListItem,
+	ListItemText,
+	ListItemAvatar,
+	Divider,
 } from "@material-ui/core";
 import * as React from "react";
 import APIURL from "../../helpers/environment";
+import { Comment, Post } from "../InterfaceExports";
+import "./AllPosts.css";
+import PersonIcon from "@material-ui/icons/Person";
 
-export interface PublicPost {
-	author: string;
-	body: string;
-	createdAt: string;
-	edited: boolean;
-	id: number;
-	private: boolean;
-	tags: string[];
-	title: string;
-	updatedAt: string;
-	userId: number;
-}
-
-export interface PublicComment {
-	author: string;
-	body: string;
-	createdAt: string;
-	edited: boolean;
-	id: number;
-	postId: number;
-	private: boolean;
-	updatedAt: string;
-	userId: number;
-}
-
-export interface State {
-	list: PublicPost[];
-	comments: PublicComment[];
+interface State {
+	panel: string;
+	expanded: string;
+	list: Post[];
+	comments: Comment[];
 	test: any;
 	commentToggle: boolean;
 	currentPost: number;
 }
+
 export default class AllPosts extends React.Component {
 	reformatDate(rawDate: string) {
 		let month = rawDate.slice(5, 7);
@@ -50,6 +40,8 @@ export default class AllPosts extends React.Component {
 	}
 
 	state: State = {
+		panel: "false",
+		expanded: "",
 		currentPost: 99999999,
 		commentToggle: false,
 		test: "starter",
@@ -115,7 +107,7 @@ export default class AllPosts extends React.Component {
 		//return nameReturn;
 	} */
 
-	sortRecent(arr: PublicPost[]) {
+	sortRecent(arr: Post[]) {
 		arr.sort((a, b) => a.id - b.id);
 		arr.reverse();
 		this.setState({
@@ -136,79 +128,124 @@ export default class AllPosts extends React.Component {
 		this.setState({ commentToggle: true });
 	};
 
+	handleChange = (panel: string) => (
+		event: React.ChangeEvent<{}>,
+		newExpanded: boolean
+	) => {
+		if (newExpanded) {
+			this.setState({ panel: false });
+		}
+	};
+
 	render() {
 		// should probably move this out to another class component - not sure how to keep ALL elements from displaying ALL comments & toggling together
 		return (
-			<div>
-				{this.state.list.map((post: PublicPost) => {
+			<Container>
+				<h2>latest posts: </h2>
+				{this.state.list.map((post: Post) => {
 					/* let postAuthor = this.getName(post.userId);
 					console.log(postAuthor); */
 					return (
-						<Card key={post.id}>
+						<Card className="guestCard" key={post.id}>
 							<CardContent>
-								<Typography color="textSecondary" gutterBottom>
-									userId: {post.author}
-								</Typography>
-								<Typography variant="h5" component="h2">
-									{post.title}
-								</Typography>
-								<Typography color="textSecondary">
-									{this.reformatDate(post.createdAt)}
-								</Typography>
-								<Typography variant="body2" component="p">
-									{post.body}
-								</Typography>
-								{this.state.commentToggle &&
-								this.state.currentPost === post.id ? (
-									<div>
-										{this.state.comments.length > 0 ? (
-											this.state.comments.map((comment: PublicComment) => {
-												return (
-													<span key={comment.id}>
-														<p>
-															{comment.body},{" "}
-															{this.reformatDate(comment.createdAt)},{" "}
-															{comment.author}
-														</p>
-													</span>
-												);
-											})
-										) : (
-											<p>no comments</p>
-										)}
-									</div>
-								) : (
-									<div></div>
-								)}
+								<List>
+									<Typography variant="h5" component="h2">
+										{post.title}
+									</Typography>
+									<Typography color="textSecondary">
+										{post.author}
+										{" - "}
+										{this.reformatDate(post.createdAt)}
+									</Typography>
+									<Typography variant="body2" component="p">
+										{post.body}
+									</Typography>
+									<br />
+									<Divider variant="inset" component="li" />
+									<br />
+									{this.state.commentToggle &&
+									this.state.currentPost === post.id &&
+									this.state.comments.length > 0 ? (
+										this.state.comments.map((comment: Comment) => {
+											return (
+												<span>
+													<ListItem key={comment.id}>
+														<ListItemAvatar>
+															<PersonIcon />
+														</ListItemAvatar>
+														<ListItemText
+															className="comment-text"
+															primary={comment.body}
+															secondary={
+																<React.Fragment>
+																	<Typography
+																		component="span"
+																		variant="body2"
+																		color="textPrimary"
+																	>
+																		{comment.author}
+																	</Typography>
+																	{" -- "}
+																	{this.reformatDate(comment.updatedAt)}
+																</React.Fragment>
+															}
+														/>
+														{/* <AccordionDetails key={comment.id}>
+															<Typography>
+																{comment.body},{" "}
+																{this.reformatDate(comment.createdAt)},{" "}
+																{comment.author}
+															</Typography>
+														</AccordionDetails> */}
+													</ListItem>
+													<Divider variant="inset" component="li" />
+												</span>
+											);
+										})
+									) : this.state.commentToggle &&
+									  this.state.currentPost === post.id &&
+									  this.state.comments.length === 0 ? (
+										<span>no comments</span>
+									) : (
+										<span></span>
+									)}
+								</List>
 							</CardContent>
 							<CardActions>
 								{this.state.commentToggle &&
 								this.state.currentPost === post.id ? (
-									<Button
-										size="small"
-										key={post.id}
-										onClick={() => {
-											this.setState({ commentToggle: false });
-										}}
-									>
-										<p>hide comments</p>
-									</Button>
+									<AccordionSummary>
+										<Button
+											size="small"
+											key={post.id}
+											onClick={() => {
+												this.setState({ commentToggle: false });
+											}}
+										>
+											<Typography>hide comments</Typography>
+										</Button>
+									</AccordionSummary>
 								) : (
-									<Button
-										size="small"
-										key={post.id}
-										onClick={() => {
-											this.fetchComments(post.id);
-										}}
+									<AccordionSummary
+										aria-controls="comment-content"
+										id="comment-header"
 									>
-										<p>show comments</p>
-									</Button>
+										<Button
+											size="small"
+											key={post.id}
+											onClick={() => {
+												this.fetchComments(post.id);
+											}}
+										>
+											<Typography>show comments</Typography>
+										</Button>
+									</AccordionSummary>
 								)}
 							</CardActions>
 						</Card>
 					);
 				})}
-			</div>
+			</Container>
 		);
 	}
 }

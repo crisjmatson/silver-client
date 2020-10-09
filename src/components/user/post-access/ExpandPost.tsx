@@ -1,17 +1,31 @@
 import {
 	Button,
+	ButtonGroup,
 	Dialog,
 	DialogActions,
 	DialogContent,
 	DialogContentText,
-	DialogProps,
 	DialogTitle,
+	List,
+	ListItem,
+	ListItemText,
 	Slide,
+	TextField,
+	Typography,
 } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import Grid from "@material-ui/core/Grid/Grid";
+import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
-import { Formik, Form, Field } from "formik";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import PersonOutlineRoundedIcon from "@material-ui/icons/PersonOutlineRounded";
+import { Field, Form, Formik } from "formik";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
+import { Comment, Post } from "../../InterfaceExports";
+import AdminPost from "./admin-post/AdminPost";
 import DeletePost from "./DeletePost";
 import EditPost from "./EditPost";
 
@@ -27,42 +41,19 @@ interface State {
 	delete: boolean;
 	edit: boolean;
 	commentEdit: boolean;
-	post: SelectedPost;
+	post: Post;
 	comments: Comment[];
+	adminToggle: boolean;
 }
 interface Props {
 	coin: string | undefined;
 	expandPostId: number | undefined;
 	currentuser: string | undefined;
+	adminStatus: boolean;
 	setExpand: (expandValue: boolean, value?: number | undefined) => void;
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName?: (name: string) => void;
 	refresh: () => Promise<void>;
-}
-
-interface SelectedPost {
-	author: string;
-	body: string;
-	createdAt: string;
-	edited: boolean;
-	id: number;
-	private: boolean;
-	tags: string[];
-	title: string;
-	updatedAt: string;
-	userId: number;
-}
-
-interface Comment {
-	author: string;
-	body: string;
-	createdAt: string;
-	edited: boolean;
-	id: number;
-	postId: number;
-	private: boolean;
-	updatedAt: string;
-	userId: number;
 }
 
 export default class ExpandPost extends Component<Props, State> {
@@ -72,6 +63,7 @@ export default class ExpandPost extends Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
+			adminToggle: false,
 			selectedComment: 0,
 			delete: false,
 			edit: false,
@@ -104,6 +96,26 @@ export default class ExpandPost extends Component<Props, State> {
 		};
 	}
 
+	HomeIcon(props: SvgIconProps) {
+		return (
+			<SvgIcon {...props}>
+				<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+			</SvgIcon>
+		);
+	}
+
+	reformatDate(rawDate: string) {
+		let month = rawDate.slice(5, 7);
+		let day = rawDate.slice(8, 10);
+		let year = rawDate.slice(0, 4);
+		let formatDate = `${month}/${day}/${year}`;
+		return formatDate;
+	}
+
+	setEdit = (status: boolean) => {
+		this.setState({ edit: status });
+	};
+
 	postFetch = () => {
 		fetch(`${APIURL}/post/full/${this.props.expandPostId}`, {
 			method: "GET",
@@ -116,7 +128,7 @@ export default class ExpandPost extends Component<Props, State> {
 			.then((json) => this.setResults(json.post, json.comments));
 	};
 
-	setResults = (post: SelectedPost, comments: Comment[]) => {
+	setResults = (post: Post, comments: Comment[]) => {
 		this.setState({ post: post });
 		this.setState({ comments: comments });
 		console.log(this.state);
@@ -156,7 +168,7 @@ export default class ExpandPost extends Component<Props, State> {
 			body: JSON.stringify(submission),
 		})
 			.then(() => this.postFetch())
-			.then(() => this.setState({ commentEdit: false }));
+			.then(() => this.setState({ commentEdit: false, selectedComment: 0 }));
 	};
 
 	deleteCommentFetch = (num: number) => {
@@ -172,155 +184,238 @@ export default class ExpandPost extends Component<Props, State> {
 	render() {
 		return (
 			<div>
-				<Dialog
-					TransitionComponent={Transition}
-					keepMounted
-					open={true}
-					aria-labelledby="alert-dialog-slide-title"
-					aria-describedby="alert-dialog-slide-description"
-				>
-					{this.state.edit ? (
-						<span>
-							<EditPost post={this.state.post} coin={this.props.coin} />
-							<br />
-							<Button
-								onClick={() => this.setState({ edit: false })}
-								color="primary"
-							>
-								close
-							</Button>
-						</span>
-					) : this.state.delete ? (
-						<span>
-							<DeletePost
-								post={this.state.post}
-								coin={this.props.coin}
-								setExpand={this.props.setExpand}
-								refresh={this.props.refresh}
-							/>
-							<br />
-							<Button
-								onClick={() => this.setState({ delete: false })}
-								color="primary"
-							>
-								close
-							</Button>
-						</span>
-					) : (
-						<span>
-							<DialogTitle id="alert-dialog-slide-title">
-								{this.state.post.title} - from user {this.state.post.author}
-							</DialogTitle>
-							<DialogContent>
-								<DialogContentText id="alert-dialog-slide-description">
-									{this.state.post.body}
-								</DialogContentText>
-								<Formik
-									initialValues={{ entry: "" }}
-									onSubmit={(values, actions) => {
-										console.log({ values, actions });
-										this.commentPost(values);
-									}}
-								>
-									<Form>
-										<label htmlFor="entry">comment</label>
-										<br />
-										<Field id="entry" name="entry" placeholder="comment" />
-										<button type="submit">Submit</button>
-									</Form>
-								</Formik>
-								<hr />
-								{this.state.comments.map((comment) => {
-									return (
-										<div>
-											{this.state.commentEdit &&
-											comment.author === this.props.currentuser &&
-											this.state.selectedComment === comment.id ? (
-												<Formik
-													initialValues={{ entry: "" }}
-													onSubmit={(values, actions) => {
-														console.log({ values, actions });
-														this.commentEditFetch(values, comment.id);
-													}}
-												>
-													<Form>
-														<label htmlFor="entry">edit comment</label>
-														<br />
-														<Field
-															id="entry"
-															name="entry"
-															placeholder={comment.body}
-														/>
-														<button type="submit">Submit</button>
-														<button
-															onClick={() =>
-																this.setState({ commentEdit: false })
-															}
-														>
-															cancel
-														</button>
-														<button
-															onClick={() =>
-																this.deleteCommentFetch(comment.id)
-															}
-														>
-															delete
-														</button>
-													</Form>
-												</Formik>
-											) : (
-												<p key={comment.id}>{comment.body}</p>
-											)}
-											<p>
-												{comment.author}, {comment.createdAt}
-											</p>
-											{comment.author === this.props.currentuser ? (
-												<Button
-													onClick={() =>
-														this.setState({
-															commentEdit: true,
-															selectedComment: comment.id,
-														})
-													}
-												>
-													Edit
-												</Button>
-											) : (
-												<span></span>
-											)}
-										</div>
-									);
-								})}
-							</DialogContent>
-							<DialogActions>
-								{this.props.currentuser === this.state.post.author ? (
-									<span>
-										<Button
-											onClick={() => this.setState({ edit: true })}
-											color="primary"
-										>
-											edit
-										</Button>
-										<Button
-											onClick={() => this.setState({ delete: true })}
-											color="primary"
-										>
-											delete post
-										</Button>
-									</span>
-								) : (
-									<span></span>
-								)}
+				{this.state.post ? (
+					<Dialog
+						TransitionComponent={Transition}
+						keepMounted
+						open={true}
+						aria-labelledby="alert-dialog-slide-title"
+						aria-describedby="alert-dialog-slide-description"
+					>
+						{this.state.adminToggle ? (
+							<span>
+								<AdminPost
+									post={this.state.post}
+									comments={this.state.comments}
+									coin={this.props.coin}
+									postFetch={this.postFetch}
+									refresh={this.props.refresh}
+									setExpand={this.props.setExpand}
+								/>
+								<DialogActions>
+									<Button onClick={() => this.setState({ adminToggle: false })}>
+										close
+									</Button>
+								</DialogActions>
+							</span>
+						) : this.state.edit ? (
+							<span>
+								<EditPost
+									post={this.state.post}
+									coin={this.props.coin}
+									refresh={this.props.refresh}
+									setEdit={this.setEdit}
+								/>
+								<br />
 								<Button
-									onClick={() => this.props.setExpand(false)}
+									onClick={() => this.setState({ edit: false })}
 									color="primary"
 								>
 									close
 								</Button>
-							</DialogActions>
-						</span>
-					)}
-				</Dialog>
+							</span>
+						) : this.state.delete ? (
+							<span>
+								<DeletePost
+									post={this.state.post}
+									coin={this.props.coin}
+									setExpand={this.props.setExpand}
+									refresh={this.props.refresh}
+								/>
+								<br />
+								<Button
+									onClick={() => this.setState({ delete: false })}
+									color="primary"
+								>
+									close
+								</Button>
+							</span>
+						) : (
+							<span>
+								<DialogTitle id="alert-dialog-slide-title">
+									{this.state.post.title} - from user {this.state.post.author}{" "}
+									{this.props.adminStatus ? (
+										<Button
+											onClick={() => this.setState({ adminToggle: true })}
+										>
+											admin
+										</Button>
+									) : (
+										<span></span>
+									)}
+								</DialogTitle>
+								<DialogContent>
+									<DialogContentText id="alert-dialog-slide-description">
+										{this.state.post.body}
+									</DialogContentText>
+									<Formik
+										initialValues={{ entry: "" }}
+										onSubmit={(values, actions) => {
+											//console.log({ values, actions });
+											this.commentPost(values);
+										}}
+									>
+										<Form noValidate autoComplete="off">
+											<TextField
+												id="entry"
+												name="entry"
+												placeholder="comment"
+												label="comment"
+											/>
+
+											<Button type="submit">Submit</Button>
+										</Form>
+									</Formik>
+									<hr />
+
+									<List>
+										{this.state.comments.map((comment) => {
+											return (
+												<div>
+													{this.state.commentEdit &&
+													comment.author === this.props.currentuser &&
+													this.state.selectedComment === comment.id ? (
+														<Formik
+															initialValues={{ entry: "" }}
+															onSubmit={(values, actions) => {
+																console.log({ values, actions });
+																this.commentEditFetch(values, comment.id);
+															}}
+														>
+															<Form>
+																<label htmlFor="entry">edit comment</label>
+																<br />
+																<Field
+																	id="entry"
+																	name="entry"
+																	placeholder={comment.body}
+																/>
+																<ButtonGroup
+																	variant="contained"
+																	color="primary"
+																	aria-label="contained primary button group"
+																>
+																	<Button type="submit">Submit</Button>
+																	<Button
+																		onClick={() =>
+																			this.setState({
+																				commentEdit: false,
+																				selectedComment: 9999999999,
+																			})
+																		}
+																	>
+																		cancel
+																	</Button>
+																	<Button
+																		onClick={() =>
+																			this.deleteCommentFetch(comment.id)
+																		}
+																	>
+																		delete
+																	</Button>
+																</ButtonGroup>
+															</Form>
+														</Formik>
+													) : (
+														<ListItem key={comment.id} alignItems="flex-start">
+															{comment.author === this.props.currentuser &&
+															this.state.selectedComment !== comment.id ? (
+																<span className="comment-icon">
+																	<Button
+																		onClick={() =>
+																			this.setState({
+																				commentEdit: true,
+																				selectedComment: comment.id,
+																			})
+																		}
+																	>
+																		<EditOutlinedIcon />
+																	</Button>
+																</span>
+															) : (
+																<span className="comment-icon">
+																	<PersonOutlineRoundedIcon />
+																</span>
+															)}
+															<ListItemText
+																className="comment-text"
+																primary={comment.body}
+																secondary={
+																	<React.Fragment>
+																		<Typography
+																			component="span"
+																			variant="body2"
+																			color="textPrimary"
+																		>
+																			{comment.author}
+																		</Typography>
+																		{" -- "}
+																		{this.reformatDate(comment.updatedAt)}
+																	</React.Fragment>
+																}
+															/>
+														</ListItem>
+													)}
+												</div>
+											);
+										})}{" "}
+									</List>
+								</DialogContent>
+								<DialogActions>
+									{this.props.currentuser === this.state.post.author ? (
+										<span>
+											<Button
+												onClick={() => this.setState({ edit: true })}
+												variant="contained"
+												color="primary"
+												startIcon={<EditIcon />}
+											>
+												edit
+											</Button>
+											{"      			"}
+											<Button
+												onClick={() => this.setState({ delete: true })}
+												variant="contained"
+												color="primary"
+												startIcon={<DeleteIcon />}
+											>
+												delete
+											</Button>
+										</span>
+									) : (
+										<span></span>
+									)}
+									<Button
+										onClick={() => this.props.setExpand(false)}
+										color="primary"
+									>
+										close
+									</Button>
+								</DialogActions>
+							</span>
+						)}
+					</Dialog>
+				) : (
+					<Dialog
+						TransitionComponent={Transition}
+						keepMounted
+						open={true}
+						aria-labelledby="loading slide"
+						aria-describedby="spinning circle"
+					>
+						<CircularProgress />
+					</Dialog>
+				)}
 			</div>
 		);
 	}

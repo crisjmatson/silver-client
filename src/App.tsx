@@ -1,6 +1,7 @@
+import { Button, Container } from "@material-ui/core";
 import * as React from "react";
 import "./App.css";
-import Auth from "./components/Authenticate";
+import Auth from "./components/guest/Authenticate";
 import AllPosts from "./components/guest/AllPosts";
 import Entrance from "./components/user/Entrance";
 
@@ -22,6 +23,7 @@ export default class App extends React.Component {
 	state = {
 		coin: "",
 		currentuser: "",
+		admin: false,
 	};
 
 	setCoin = (newCoin: string | undefined) => {
@@ -32,29 +34,38 @@ export default class App extends React.Component {
 		this.setState({ currentuser: name });
 	};
 
+	setAdmin = (status: boolean) => {
+		this.setState({ admin: status });
+	};
+
 	render() {
 		return (
 			<div className="ultimateContainer">
 				<this.weschContext.Provider value={this.state}>
 					<div className="App">
 						{this.state.coin === "" ? (
-							<div className="authenticate-maindiv">
-								<Auth
-									coin={this.state.coin}
-									setCoin={this.setCoin}
+							<Container className="app-dual">
+								<Container className="authenticate-maindiv">
+									<Auth
+										coin={this.state.coin}
+										setCoin={this.setCoin}
+										currentuser={this.state.currentuser}
+										setCoinName={this.setCoinName}
+										setAdmin={this.setAdmin}
+									/>
+								</Container>
+								<AllPosts />
+							</Container>
+						) : (
+							<Container className="app-dual">
+								<Entrance
 									currentuser={this.state.currentuser}
 									setCoinName={this.setCoinName}
+									coin={this.state.coin}
+									setCoin={this.setCoin}
+									adminStatus={this.state.admin}
 								/>
-								<hr />
-								<AllPosts />
-							</div>
-						) : (
-							<Entrance
-								currentuser={this.state.currentuser}
-								setCoinName={this.setCoinName}
-								coin={this.state.coin}
-								setCoin={this.setCoin}
-							/>
+							</Container>
 						)}
 					</div>
 				</this.weschContext.Provider>

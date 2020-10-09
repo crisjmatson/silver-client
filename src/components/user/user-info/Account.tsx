@@ -26,12 +26,15 @@ import { Formik, Form } from "formik";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
 import DeleteAcct from "./DeleteAcct";
+import { User, Profile } from "../../InterfaceExports";
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName: (name: string) => void;
 	currentuser: string | undefined;
 	coin: string | undefined;
+	userAccount: User;
+	userProfile: Profile;
 }
 
 interface State {
@@ -39,43 +42,18 @@ interface State {
 	edit: boolean;
 	delete: boolean;
 	grad_status: unknown;
-	user: User;
-	profile: Profile;
-}
-
-interface User {
-	createdAt: string;
-	email: string;
-	id: number;
-	password: string;
-	role: string;
-	updatedAt: string;
-	username: string;
-}
-
-interface Profile {
-	avatar: string;
-	challenges_completed: number;
-	createdAt: string;
-	date_graduated: string;
-	grad_status: string;
-	id: number;
-	updatedAt: string;
-	userId: number;
+	/* user: User;
+	profile: Profile; */
 }
 
 export default class Account extends Component<Props, State> {
-	componentDidMount() {
+	/* componentDidMount() {
 		this.accountFetch();
-	}
+	} */
 	constructor(props: Props) {
 		super(props);
 		this.state = {
-			grad_status: "",
-			profileReady: true,
-			edit: false,
-			delete: false,
-			user: {
+			/* 	user: {
 				createdAt: "string",
 				email: "string",
 				id: 999999999999,
@@ -93,7 +71,11 @@ export default class Account extends Component<Props, State> {
 				id: 999999999999,
 				updatedAt: "",
 				userId: 999999999999,
-			},
+			}, */
+			grad_status: "",
+			profileReady: true,
+			edit: false,
+			delete: false,
 		};
 	}
 	reformatDate(rawDate: string) {
@@ -110,7 +92,7 @@ export default class Account extends Component<Props, State> {
 	toggleDelete = (value: any) => {
 		this.setState({ delete: !value });
 	};
-
+	/* 
 	accountFetch = () => {
 		fetch(`${APIURL}/user/view/${this.props.currentuser}`, {
 			method: "GET",
@@ -167,7 +149,7 @@ export default class Account extends Component<Props, State> {
 		})
 			.then((response) => response.json())
 			.then((json) => this.setState({ profile: json.user }));
-	}
+	} */
 
 	dualUpdate = (updates: {
 		age: number;
@@ -213,7 +195,7 @@ export default class Account extends Component<Props, State> {
 							<CardActionArea>
 								<CardContent>
 									<Typography gutterBottom variant="h5" component="h2">
-										{this.state.user.username}
+										{this.props.userAccount.username}
 									</Typography>
 									<Typography
 										variant="body2"
@@ -239,7 +221,7 @@ export default class Account extends Component<Props, State> {
 														<div>
 															<TextField
 																name="email"
-																placeholder={this.state.user.email}
+																placeholder={this.props.userAccount.email}
 																value={values.email}
 																onChange={handleChange}
 																onBlur={handleBlur}
@@ -312,7 +294,7 @@ export default class Account extends Component<Props, State> {
 							<CardActionArea>
 								<CardContent>
 									<Typography gutterBottom variant="h5" component="h2">
-										Name: {this.state.user.username}
+										Name: {this.props.userAccount.username}
 									</Typography>
 									<Typography
 										variant="body2"
@@ -322,26 +304,26 @@ export default class Account extends Component<Props, State> {
 										<ul>
 											<li>
 												email -{" "}
-												{this.state.user === undefined
+												{this.props.userAccount === undefined
 													? "n/a"
-													: this.state.user.email}
+													: this.props.userAccount.email}
 											</li>
 											<li>
 												joined -{" "}
-												{this.state.user === undefined
+												{this.props.userAccount === undefined
 													? "n/a"
-													: this.reformatDate(this.state.user.createdAt)}
+													: this.reformatDate(this.props.userAccount.createdAt)}
 											</li>
 											<li>
 												status -{" "}
-												{this.state.profile.grad_status !== ""
-													? this.state.profile.grad_status
+												{this.props.userProfile.grad_status !== ""
+													? this.props.userProfile.grad_status
 													: "not available"}
 											</li>
 											<li>
 												graduated -{" "}
-												{this.state.profile.date_graduated !== ""
-													? this.state.profile.date_graduated
+												{this.props.userProfile.date_graduated !== ""
+													? this.props.userProfile.date_graduated
 													: "not available"}
 											</li>
 										</ul>

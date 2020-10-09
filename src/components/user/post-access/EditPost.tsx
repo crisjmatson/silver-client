@@ -4,10 +4,12 @@ import {
 	Button,
 	DialogContent,
 	DialogTitle,
+	DialogContentText,
 } from "@material-ui/core";
 import { Formik, Form } from "formik";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
+import './EditPost.css'
 
 interface SelectedPost {
 	author: string;
@@ -25,6 +27,8 @@ interface SelectedPost {
 interface Props {
 	post: SelectedPost;
 	coin: string | undefined;
+	refresh: () => void;
+	setEdit: (status: boolean) => void;
 	/* {
 		author: string;
 		body: string;
@@ -83,15 +87,23 @@ export default class EditPost extends Component<Props> {
 			body: JSON.stringify(postSubmission),
 		})
 			.then((response) => response.json())
-			.then((json) => console.log(json));
+			.then((json) => console.log(json))
+			.then(() => {
+				this.props.setEdit(false);
+				this.props.refresh();
+			});
 	};
 
 	render() {
 		return (
-			<div>
-				<h1>Edit Post</h1>
-				<DialogTitle>edit: {this.props.post.title}</DialogTitle>
+			<div className="editpost-dialog">
+				<DialogTitle>
+					edit: {this.props.post.title} - from user {this.props.post.author}{" "}
+				</DialogTitle>
 				<DialogContent>
+					<DialogContentText id="alert-dialog-slide-description">
+						{this.props.post.body}
+					</DialogContentText>
 					<FormGroup>
 						<Formik
 							initialValues={{ title: "", body: "" }}

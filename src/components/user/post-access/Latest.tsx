@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import * as React from "react";
 import APIURL from "../../../helpers/environment";
+import "./Latest.css";
 import ExpandPost from "./ExpandPost";
 
 export interface latestProps {
@@ -14,6 +15,7 @@ export interface latestProps {
 	setCoinName?: (name: string) => void;
 	currentuser: string | undefined;
 	coin: string | undefined;
+	adminStatus: boolean;
 }
 
 export interface latestState {
@@ -103,6 +105,7 @@ export default class Latest extends React.Component<latestProps, latestState> {
 							coin={this.props.coin}
 							currentuser={this.props.currentuser}
 							refresh={this.latestPosts}
+							adminStatus={this.props.adminStatus}
 						/>
 					</span>
 				) : (
@@ -115,7 +118,7 @@ export default class Latest extends React.Component<latestProps, latestState> {
 				<div>
 					{this.state.recent.map((post) => {
 						return (
-							<Card key={post.id} className={"card" + post.id}>
+							<Card key={post.id} className="latest-card">
 								<CardContent>
 									<Typography color="textSecondary" gutterBottom>
 										userId: {post.author}
