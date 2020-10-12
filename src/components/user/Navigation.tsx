@@ -18,7 +18,7 @@ import { User, Profile } from "../InterfaceExports";
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName: (name: string) => void;
-	currentuser: string | undefined;
+	currentuser: string;
 	coin: string | undefined;
 	adminStatus: boolean;
 }
@@ -41,13 +41,13 @@ export default class Navigation extends React.Component<Props, State> {
 			edit: false,
 			delete: false,
 			user: {
-				createdAt: "string",
-				email: "string",
+				createdAt: "",
+				email: "",
 				id: 999999999999,
-				password: "string",
-				role: "string",
-				updatedAt: "string",
-				username: "string",
+				password: "",
+				role: "",
+				updatedAt: "",
+				username: "",
 			},
 			profile: {
 				avatar: "",
@@ -76,12 +76,47 @@ export default class Navigation extends React.Component<Props, State> {
 		})
 			.then((response) => response.json())
 			.then((json) => {
-				//console.log(json);
 				this.setState({ user: json.user });
-				//this.setViewCard();
-			});
-		//.then(() => this.profileFetch());
+				console.log("user set");
+			})
+			.then(() => this.profileFetch());
 	};
+	profileFetch() {
+		fetch(`${APIURL}/profile/view`, {
+			method: "GET",
+			headers: new Headers({
+				"Content-Type": "application/json",
+				Authorization: `${this.props.coin}`,
+			}),
+		})
+			.then((response) => response.json())
+			.then((json) =>
+				json.error
+					? this.profileCreate()
+					: this.setState({ profile: json.user })
+			);
+		console.log("profile set");
+	}
+	profileCreate() {
+		let blank = {
+			profile: {
+				avatar: "",
+				grad_status: "",
+				date_graduated: "",
+			},
+		};
+		fetch(`${APIURL}/profile`, {
+			method: "POST",
+			headers: new Headers({
+				"Content-Type": "application/json",
+				Authorization: `${this.props.coin}`,
+			}),
+			body: JSON.stringify(blank),
+		})
+			.then((response) => response.json())
+			.then((json) => this.setState({ profile: json.user }));
+		console.log("profile set");
+	}
 
 	handleClick = (event: React.MouseEvent<HTMLElement>) => {
 		this.setState({ anchorEl: true });

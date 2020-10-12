@@ -6,7 +6,7 @@ import Navigation from "./Navigation";
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName: (name: string) => void;
-	currentuser: string | undefined;
+	currentuser: string;
 	coin: string | undefined;
 	adminStatus: boolean;
 }

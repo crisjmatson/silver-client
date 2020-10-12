@@ -14,7 +14,6 @@ import {
 	Typography,
 } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
-import Grid from "@material-ui/core/Grid/Grid";
 import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -261,7 +260,6 @@ export default class ExpandPost extends Component<Props, State> {
 									<Formik
 										initialValues={{ entry: "" }}
 										onSubmit={(values, actions) => {
-											//console.log({ values, actions });
 											this.commentPost(values);
 										}}
 									>

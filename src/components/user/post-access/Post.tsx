@@ -16,7 +16,9 @@ import {
 	TextField,
 	FormControlLabel,
 	Switch,
+	Chip,
 } from "@material-ui/core";
+import DoneIcon from "@material-ui/icons/Done";
 
 interface MyFormValues {
 	title: string;
@@ -32,6 +34,12 @@ interface Props {
 }
 interface State {
 	postPrivacy: boolean;
+	challenge: boolean;
+	solution: boolean;
+	personal: boolean;
+	work: boolean;
+	study: boolean;
+	color1: string;
 }
 
 export default class Post extends React.Component<Props, State> {
@@ -39,12 +47,18 @@ export default class Post extends React.Component<Props, State> {
 		super(props);
 		this.state = {
 			postPrivacy: false,
+			challenge: false,
+			solution: false,
+			personal: false,
+			work: false,
+			study: false,
+			color1: "default",
 		};
 	}
 
-	componentWillUnmount() {
+	/* 	componentDidUnmount() {
 		this.setState({ postPrivacy: false });
-	}
+	} */
 
 	handleSwitchChange = () => {
 		let opposite = this.state.postPrivacy;
@@ -52,26 +66,56 @@ export default class Post extends React.Component<Props, State> {
 		console.log(this.state.postPrivacy);
 	};
 
-	/* initialValues: MyFormValues = {
-		title: "",
-		body: "",
-		privacy: false,
-	}; */
+	addChip = (chip: string) => {
+		if (chip === "challenge") {
+			this.state.challenge
+				? this.setState({ challenge: false })
+				: this.setState({ challenge: true });
+		} else if (chip === "solution") {
+			this.state.solution
+				? this.setState({ solution: false })
+				: this.setState({ solution: true });
+		} else if (chip === "personal") {
+			this.state.personal
+				? this.setState({ personal: false })
+				: this.setState({ personal: true });
+		} else if (chip === "work") {
+			this.state.work
+				? this.setState({ work: false })
+				: this.setState({ work: true });
+		} else if (chip === "study") {
+			this.state.study
+				? this.setState({ study: false })
+				: this.setState({ study: true });
+		}
+	};
 
 	postPost = async (values: {
 		title: string;
 		body: string;
 		privacy: boolean;
 	}) => {
+		let tagSubmit: any[] = [];
+		let tags = [
+			{ value: this.state.challenge, tagName: "challenge" },
+			{ value: this.state.solution, tagName: "solution" },
+			{ value: this.state.personal, tagName: "personal" },
+			{ value: this.state.work, tagName: "work" },
+			{ value: this.state.study, tagName: "study" },
+		];
+		tags.map((tag) => {
+			if (tag.value === true) {
+				tagSubmit.push(tag.tagName);
+			}
+		});
 		let postBody = {
 			post: {
 				title: values.title,
 				body: values.body,
 				private: this.state.postPrivacy,
+				tags: tagSubmit,
 			},
 		};
-		//console.log(postBody);
-
 		let result = await fetch(`${APIURL}/post`, {
 			method: "POST",
 			headers: new Headers({
@@ -81,7 +125,7 @@ export default class Post extends React.Component<Props, State> {
 			body: JSON.stringify(postBody),
 		});
 		let json = await result.json();
-		//console.log(json);
+		console.log(json);
 	};
 
 	render() {
@@ -114,19 +158,51 @@ export default class Post extends React.Component<Props, State> {
 								onBlur={handleBlur}
 							/>
 							<br />
+							<div>
+								<Chip
+									label="challenge"
+									onClick={() => this.addChip("challenge")}
+									deleteIcon={<DoneIcon />}
+									color={this.state.challenge ? "primary" : "default"}
+								/>
+								<Chip
+									label="solution"
+									onClick={() => this.addChip("solution")}
+									deleteIcon={<DoneIcon />}
+									color={this.state.solution ? "primary" : "default"}
+								/>
+								<Chip
+									label="personal"
+									onClick={() => this.addChip("personal")}
+									deleteIcon={<DoneIcon />}
+									color={this.state.personal ? "primary" : "default"}
+								/>
+								<Chip
+									label="work"
+									onClick={() => this.addChip("work")}
+									deleteIcon={<DoneIcon />}
+									color={this.state.work ? "primary" : "default"}
+								/>
+								<Chip
+									label="study"
+									onClick={() => this.addChip("study")}
+									deleteIcon={<DoneIcon />}
+									color={this.state.study ? "primary" : "default"}
+								/>
+							</div>
+							<br />
 							<FormControlLabel
 								control={
 									<Switch
 										id="privacy"
 										name="privacy"
-										onChange={handleChange}
+										onChange={this.handleSwitchChange}
 										onBlur={handleBlur}
 										placeholder="false"
 									/>
 								}
 								label="Private?"
 							/>
-							{/* <TextField id="privacy" name="privacy" placeholder="false" /> */}
 							<br />
 							<Button type="submit">Submit</Button>
 						</Form>

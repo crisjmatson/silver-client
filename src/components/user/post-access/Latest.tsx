@@ -1,14 +1,15 @@
 import {
+	Button,
 	Card,
+	CardActions,
 	CardContent,
 	Typography,
-	CardActions,
-	Button,
 } from "@material-ui/core";
+import Chip from "@material-ui/core/Chip/Chip";
 import * as React from "react";
 import APIURL from "../../../helpers/environment";
-import "./Latest.css";
 import ExpandPost from "./ExpandPost";
+import "./Latest.css";
 
 export interface latestProps {
 	setCoin: (newCoin: string | undefined) => void;
@@ -120,18 +121,25 @@ export default class Latest extends React.Component<latestProps, latestState> {
 						return (
 							<Card key={post.id} className="latest-card">
 								<CardContent>
-									<Typography color="textSecondary" gutterBottom>
-										userId: {post.author}
-									</Typography>
 									<Typography variant="h5" component="h2">
 										{post.title}
+										{"   "}
 										{post.edited ? "(edited)" : ""}
 									</Typography>
 									<Typography color="textSecondary">
-										{this.reformatDate(post.createdAt)}
+										{post.author}, {this.reformatDate(post.createdAt)}
 									</Typography>
 									<Typography variant="body2" component="p">
 										{post.body}
+									</Typography>
+									<Typography variant="body2" component="p">
+										{post.tags.map((tag) => {
+											return (
+												<span key={tag}>
+													<Chip label={tag} />
+												</span>
+											);
+										})}
 									</Typography>
 								</CardContent>
 								<CardActions>
