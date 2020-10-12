@@ -42,6 +42,7 @@ export default class Authenticate extends React.Component<
 				pass: password,
 			},
 		};
+		console.log(APIURL, user);
 		let response = await fetch(`${APIURL}/user/enter`, {
 			method: "POST",
 			headers: new Headers({
@@ -67,7 +68,7 @@ export default class Authenticate extends React.Component<
 				pass: password,
 			},
 		};
-		console.log(user);
+		console.log(APIURL, user);
 		let response = await fetch(`${APIURL}/user/start`, {
 			method: "POST",
 			headers: new Headers({
