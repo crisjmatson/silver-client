@@ -1,8 +1,12 @@
 import { Button, FormGroup, TextField } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid/Grid";
+import Paper from "@material-ui/core/Paper/Paper";
 import { Form, Formik } from "formik";
 import * as React from "react";
 import APIURL from "../../helpers/environment";
 import AdminAuth from "./AdminAuth";
+import "./Authenticate.css";
+//import img from '../../../public/BasicLogoFill.png'
 
 interface authProps {
 	setCoin: (newCoin: string | undefined) => void;
@@ -92,8 +96,8 @@ export default class Authenticate extends React.Component<
 
 	render() {
 		return (
-			<div>
-				<h1>{"App Title"}</h1>
+			<div className="authenticate-div">
+				
 				{this.state.admin ? (
 					<AdminAuth
 						closeAdmin={this.closeAdmin}

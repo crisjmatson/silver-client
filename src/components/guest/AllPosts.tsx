@@ -140,13 +140,13 @@ export default class AllPosts extends React.Component {
 	render() {
 		// should probably move this out to another class component - not sure how to keep ALL elements from displaying ALL comments & toggling together
 		return (
-			<Container>
-				<h2>latest posts: </h2>
+			<Container className="guestpost-main">
+				<h1 className="guestpost-heading">LATEST POSTS: </h1>
 				{this.state.list.map((post: Post) => {
 					/* let postAuthor = this.getName(post.userId);
 					console.log(postAuthor); */
 					return (
-						<Card className="guestCard" key={post.id}>
+						<Card key={post.id} className="guestpost-Card">
 							<CardContent>
 								<List>
 									<Typography variant="h5" component="h2">
@@ -160,9 +160,7 @@ export default class AllPosts extends React.Component {
 									<Typography variant="body2" component="p">
 										{post.body}
 									</Typography>
-									<br />
 									<Divider variant="inset" component="li" />
-									<br />
 									{this.state.commentToggle &&
 									this.state.currentPost === post.id &&
 									this.state.comments.length > 0 ? (
@@ -178,11 +176,7 @@ export default class AllPosts extends React.Component {
 															primary={comment.body}
 															secondary={
 																<React.Fragment>
-																	<Typography
-																		component="span"
-																		variant="body2"
-																		color="textPrimary"
-																	>
+																	<Typography component="span">
 																		{comment.author}
 																	</Typography>
 																	{" -- "}
@@ -190,13 +184,6 @@ export default class AllPosts extends React.Component {
 																</React.Fragment>
 															}
 														/>
-														{/* <AccordionDetails key={comment.id}>
-															<Typography>
-																{comment.body},{" "}
-																{this.reformatDate(comment.createdAt)},{" "}
-																{comment.author}
-															</Typography>
-														</AccordionDetails> */}
 													</ListItem>
 													<Divider variant="inset" component="li" />
 												</span>

@@ -8,8 +8,7 @@ import {
 	FieldProps,
 } from "formik";
 import APIURL from "../../../helpers/environment";
-import "./Post.css";
-import Latest from "./Latest";
+import "./CreatePost.css";
 import {
 	Box,
 	Button,
@@ -20,14 +19,10 @@ import {
 } from "@material-ui/core";
 import DoneIcon from "@material-ui/icons/Done";
 
-interface MyFormValues {
-	title: string;
-	body: string;
-	privacy: boolean;
-}
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName?: (name: string) => void;
+	latestPosts: () => void;
 	currentuser?: string | undefined;
 	coin: string | undefined;
 	adminStatus: boolean;
@@ -39,10 +34,9 @@ interface State {
 	personal: boolean;
 	work: boolean;
 	study: boolean;
-	color1: string;
 }
 
-export default class Post extends React.Component<Props, State> {
+export default class CreatePost extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
@@ -52,13 +46,8 @@ export default class Post extends React.Component<Props, State> {
 			personal: false,
 			work: false,
 			study: false,
-			color1: "default",
 		};
 	}
-
-	/* 	componentDidUnmount() {
-		this.setState({ postPrivacy: false });
-	} */
 
 	handleSwitchChange = () => {
 		let opposite = this.state.postPrivacy;
@@ -126,6 +115,7 @@ export default class Post extends React.Component<Props, State> {
 		});
 		let json = await result.json();
 		console.log(json);
+		this.props.latestPosts();
 	};
 
 	render() {
@@ -196,6 +186,7 @@ export default class Post extends React.Component<Props, State> {
 									<Switch
 										id="privacy"
 										name="privacy"
+										color="primary"
 										onChange={this.handleSwitchChange}
 										onBlur={handleBlur}
 										placeholder="false"
@@ -208,13 +199,6 @@ export default class Post extends React.Component<Props, State> {
 						</Form>
 					)}
 				</Formik>
-				<Latest
-					currentuser={this.props.currentuser}
-					setCoinName={this.props.setCoinName}
-					coin={this.props.coin}
-					setCoin={this.props.setCoin}
-					adminStatus={this.props.adminStatus}
-				/>
 			</Box>
 		);
 	}

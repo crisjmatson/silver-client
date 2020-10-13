@@ -9,11 +9,11 @@ import {
 	Toolbar,
 	Typography,
 } from "@material-ui/core";
-import { Route, Link, Switch, Redirect } from "react-router-dom";
-import Account from "./user-info/Account";
-import Post from "./post-access/Post";
-import APIURL from "../../helpers/environment";
 import { User, Profile } from "../InterfaceExports";
+import { Route, Link, Switch, Redirect } from "react-router-dom";
+import ViewProfile from "./user-info/ViewProfile";
+import PostView from "./post-access/PostView";
+import APIURL from "../../helpers/environment";
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -67,7 +67,7 @@ export default class Navigation extends React.Component<Props, State> {
 	}
 
 	accountFetch = () => {
-		fetch(`${APIURL}/user/view/${this.props.currentuser}`, {
+		fetch(`${APIURL}/user/view`, {
 			method: "GET",
 			headers: new Headers({
 				"Content-Type": "application/json",
@@ -152,10 +152,10 @@ export default class Navigation extends React.Component<Props, State> {
 								TransitionComponent={Fade}
 							>
 								<MenuItem onClick={() => this.handleClose()}>
-									<Link to="/post">Posts</Link>
+									<Link to="/postview">Posts</Link>
 								</MenuItem>
 								<MenuItem onClick={() => this.handleClose()}>
-									<Link to="/account">Account</Link>
+									<Link to="/viewprofile">Account</Link>
 								</MenuItem>
 								{/* <MenuItem onClick={() => this.handleClose()}>
 									<Link to="/profile">Profile</Link>
@@ -176,9 +176,9 @@ export default class Navigation extends React.Component<Props, State> {
 						</Toolbar>
 					</AppBar>
 					<Switch>
-						<Route exact path="/post">
+						<Route exact path="/postview">
 							<span>
-								<Post
+								<PostView
 									currentuser={this.props.currentuser}
 									setCoinName={this.props.setCoinName}
 									coin={this.props.coin}
@@ -187,8 +187,8 @@ export default class Navigation extends React.Component<Props, State> {
 								/>
 							</span>
 						</Route>
-						<Route exact path="/account">
-							<Account
+						<Route exact path="/viewprofile">
+							<ViewProfile
 								currentuser={this.props.currentuser}
 								setCoinName={this.props.setCoinName}
 								coin={this.props.coin}

@@ -98,7 +98,7 @@ export default class Account extends Component<Props, State> {
 									>
 										<ul>
 											<li>
-												email -{this.props.userAccount.email}
+												email -
 												{this.props.userAccount === undefined
 													? "n/a"
 													: this.props.userAccount.email}
@@ -125,7 +125,7 @@ export default class Account extends Component<Props, State> {
 											</li>
 											<li>
 												status -{" "}
-												{this.props.userProfile.grad_status !== ""
+												{this.props.userProfile !== undefined
 													? this.props.userProfile.grad_status
 													: "not available"}
 												<Button
@@ -138,7 +138,7 @@ export default class Account extends Component<Props, State> {
 											</li>
 											<li>
 												graduated -{" "}
-												{this.props.userProfile.date_graduated !== ""
+												{this.props.userProfile !== undefined
 													? this.props.userProfile.date_graduated
 													: "not available"}
 												<Button

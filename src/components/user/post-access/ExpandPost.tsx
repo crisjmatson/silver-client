@@ -133,15 +133,16 @@ export default class ExpandPost extends Component<Props, State> {
 		console.log(this.state);
 	};
 
-	commentPost = (entry: { entry: string }) => {
-		console.log(entry.entry);
+	commentPost = (entry: string) => {
 		let submission = {
 			comment: {
 				postId: this.state.post.id,
-				body: entry.entry,
+				body: entry,
 				private: false,
 			},
 		};
+		console.log(submission);
+
 		fetch(`${APIURL}/comment`, {
 			method: "POST",
 			headers: new Headers({
@@ -177,7 +178,10 @@ export default class ExpandPost extends Component<Props, State> {
 				"Content-Type": "application/json",
 				Authorization: `${this.props.coin}`,
 			}),
-		}).then((response) => console.log(response));
+		}).then((response) => {
+			console.log(response);
+			this.postFetch();
+		});
 	};
 
 	render() {
@@ -214,6 +218,7 @@ export default class ExpandPost extends Component<Props, State> {
 									coin={this.props.coin}
 									refresh={this.props.refresh}
 									setEdit={this.setEdit}
+									postFetch={this.postFetch}
 								/>
 								<br />
 								<Button
@@ -258,21 +263,26 @@ export default class ExpandPost extends Component<Props, State> {
 										{this.state.post.body}
 									</DialogContentText>
 									<Formik
-										initialValues={{ entry: "" }}
+										initialValues={{ commentPost: "" }}
 										onSubmit={(values, actions) => {
-											this.commentPost(values);
+											console.log({ values, actions });
+											this.commentPost(values.commentPost);
 										}}
 									>
-										<Form noValidate autoComplete="off">
-											<TextField
-												id="entry"
-												name="entry"
-												placeholder="comment"
-												label="comment"
-											/>
-
-											<Button type="submit">Submit</Button>
-										</Form>
+										{({ values, handleChange, handleBlur }) => (
+											<Form>
+												<label htmlFor="commentPost">comment</label>
+												<br />
+												<TextField
+													id="commentPost"
+													name="commentPost"
+													placeholder="comment..."
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+												<Button type="submit">Submit</Button>
+											</Form>
+										)}
 									</Formik>
 									<hr />
 
@@ -342,7 +352,14 @@ export default class ExpandPost extends Component<Props, State> {
 																</span>
 															) : (
 																<span className="comment-icon">
-																	<PersonOutlineRoundedIcon />
+																	<Button
+																		onClick={() => {
+																			console.log("heck");
+																		}}
+																	>
+																		{" "}
+																		<PersonOutlineRoundedIcon />{" "}
+																	</Button>
 																</span>
 															)}
 															<ListItemText
@@ -394,7 +411,10 @@ export default class ExpandPost extends Component<Props, State> {
 										<span></span>
 									)}
 									<Button
-										onClick={() => this.props.setExpand(false)}
+										onClick={() => {
+											this.props.refresh();
+											this.props.setExpand(false);
+										}}
 										color="primary"
 									>
 										close

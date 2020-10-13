@@ -8,10 +8,12 @@ import {
 import Chip from "@material-ui/core/Chip/Chip";
 import * as React from "react";
 import APIURL from "../../../helpers/environment";
+import CreatePost from "./CreatePost";
 import ExpandPost from "./ExpandPost";
 import "./Latest.css";
+import { Post } from "../../InterfaceExports";
 
-export interface latestProps {
+interface Props {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName?: (name: string) => void;
 	currentuser: string | undefined;
@@ -19,13 +21,13 @@ export interface latestProps {
 	adminStatus: boolean;
 }
 
-export interface latestState {
-	recent: userPost[];
+interface State {
+	recent: Post[];
 	expandToggle: boolean;
 	expandPostId: number | undefined;
 }
-
-export interface userPost {
+/* 
+interface userPost {
 	author: string;
 	body: string;
 	createdAt: string;
@@ -36,28 +38,30 @@ export interface userPost {
 	title: string;
 	updatedAt: string;
 	userId: number;
-}
+} */
 
-export default class Latest extends React.Component<latestProps, latestState> {
-	state = {
-		expandPostId: undefined,
-		expandToggle: false,
-		recent: [
-			{
-				author: "",
-				body: "string",
-				createdAt: "string",
-				edited: false,
-				id: 0,
-				private: false,
-				tags: ["code"],
-				title: "string",
-				updatedAt: "string",
-				userId: 0,
-			},
-		],
-	};
-
+export default class Latest extends React.Component<Props, State> {
+	constructor(props: Props) {
+		super(props);
+		this.state = {
+			expandPostId: undefined,
+			expandToggle: false,
+			recent: [
+				{
+					author: "",
+					body: "string",
+					createdAt: "string",
+					edited: false,
+					id: 0,
+					private: false,
+					tags: ["code"],
+					title: "string",
+					updatedAt: "string",
+					userId: 0,
+				},
+			],
+		};
+	}
 	componentDidMount() {
 		this.latestPosts();
 	}
@@ -83,7 +87,7 @@ export default class Latest extends React.Component<latestProps, latestState> {
 		console.log(this.state.recent);
 	};
 
-	sortRecent(arr: userPost[]) {
+	sortRecent(arr: Post[]) {
 		arr.sort((a, b) => a.id - b.id);
 		arr.reverse();
 		return arr;
@@ -97,6 +101,16 @@ export default class Latest extends React.Component<latestProps, latestState> {
 	render() {
 		return (
 			<div>
+				<div>
+					<CreatePost
+						currentuser={this.props.currentuser}
+						setCoinName={this.props.setCoinName}
+						coin={this.props.coin}
+						setCoin={this.props.setCoin}
+						adminStatus={this.props.adminStatus}
+						latestPosts={this.latestPosts}
+					/>
+				</div>
 				{this.state.expandToggle ? (
 					<span>
 						<ExpandPost
@@ -114,7 +128,7 @@ export default class Latest extends React.Component<latestProps, latestState> {
 				)}
 				<h3>
 					<u>Latest Posts </u>
-					<button onClick={() => this.latestPosts()}>refresh</button>
+					<Button onClick={() => this.latestPosts()}>refresh</Button>
 				</h3>
 				<div>
 					{this.state.recent.map((post) => {

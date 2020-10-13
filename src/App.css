@@ -1,26 +1,49 @@
-.ultimateContainer {
-	background-color: #282c34;
-	color: whitesmoke;
-}
 .App {
 	text-align: center;
 }
-.app-dual {
-	padding-bottom: 10em;
+.authenticate-outer-container {
+	background-color: black;
 }
-
-.authenticate-maindiv {
-	color: whitesmoke;
-	padding: 5em;
+.landing-logo-div {
+	background-image: url("https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1651&q=80");
+	background-size: contain;
+	padding: 3em;
 }
-
-.App-header {
-	background-color: #282c34;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	font-size: calc(10px + 2vmin);
+.landing-logo-img {
+	margin-top: 12em;
+	width: 80vw;
+}
+.landing-auth-div {
+	padding: 1em;
+}
+.landing-logo-button {
+	margin: 2em;
 	color: white;
+	background-color: white;
+}
+.landing-box-trio {
+	background-image: url("https://images.unsplash.com/photo-1586557358044-e53dde045283?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80");
+	background-size: cover;
+	background-color: rgba(255, 255, 255, 0.3);
+	background-blend-mode: screen;
+	margin-top: 2em;
+}
+.landing-box-trio-grid {
+	padding: 7em;
+}
+.box-trio {
+	background-color: black;
+	color: white;
+	padding: 1em;
+}
+.entrance-container {
+	padding: 4em;
+}
+.landing-auth-card {
+	background-image: url("https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1651&q=80");
+	background-blend-mode: screen;
+	background-size: cover;
+	background-color: rgb(255, 255, 255, 0.01);
+	margin: 1em;
+	padding: 10em;
 }

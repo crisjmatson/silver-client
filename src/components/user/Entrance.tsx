@@ -12,16 +12,6 @@ interface Props {
 }
 
 export default class Entrance extends React.Component<Props> {
-	affirmation() {
-		fetch(
-			"https://www.affirmations.dev"
-		).then((res) => {
-			console.log(res);
-		});
-		//.catch(console.error);
-		//console.log("response: ", response);
-	}
-
 	render() {
 		return (
 			<div>
@@ -34,9 +24,6 @@ export default class Entrance extends React.Component<Props> {
 						adminStatus={this.props.adminStatus}
 					/>
 				</Router>
-				<Container>
-					<Button onClick={() => this.affirmation()}>affirm!!</Button>
-				</Container>
 			</div>
 		);
 	}
