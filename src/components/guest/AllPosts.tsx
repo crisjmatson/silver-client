@@ -138,13 +138,10 @@ export default class AllPosts extends React.Component {
 	};
 
 	render() {
-		// should probably move this out to another class component - not sure how to keep ALL elements from displaying ALL comments & toggling together
 		return (
 			<Container className="guestpost-main">
 				<h1 className="guestpost-heading">LATEST POSTS: </h1>
 				{this.state.list.map((post: Post) => {
-					/* let postAuthor = this.getName(post.userId);
-					console.log(postAuthor); */
 					return (
 						<Card key={post.id} className="guestpost-Card">
 							<CardContent>

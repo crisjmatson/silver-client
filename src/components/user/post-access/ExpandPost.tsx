@@ -190,6 +190,7 @@ export default class ExpandPost extends Component<Props, State> {
 				{this.state.post ? (
 					<Dialog
 						TransitionComponent={Transition}
+						onBackdropClick={() => this.props.setExpand(false)}
 						keepMounted
 						open={true}
 						aria-labelledby="alert-dialog-slide-title"

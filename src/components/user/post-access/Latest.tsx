@@ -4,6 +4,10 @@ import {
 	CardActions,
 	CardContent,
 	Typography,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
 } from "@material-ui/core";
 import Chip from "@material-ui/core/Chip/Chip";
 import * as React from "react";
@@ -12,6 +16,8 @@ import CreatePost from "./CreatePost";
 import ExpandPost from "./ExpandPost";
 import "./Latest.css";
 import { Post } from "../../InterfaceExports";
+import PostDisplay from "./PostDisplay";
+import { addSyntheticLeadingComment } from "typescript";
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -25,19 +31,10 @@ interface State {
 	recent: Post[];
 	expandToggle: boolean;
 	expandPostId: number | undefined;
+	filter: string;
 }
-/* 
-interface userPost {
-	author: string;
-	body: string;
-	createdAt: string;
-	edited: boolean;
-	id: number;
-	private: boolean;
+/* interface Tags {
 	tags: string[];
-	title: string;
-	updatedAt: string;
-	userId: number;
 } */
 
 export default class Latest extends React.Component<Props, State> {
@@ -46,6 +43,7 @@ export default class Latest extends React.Component<Props, State> {
 		this.state = {
 			expandPostId: undefined,
 			expandToggle: false,
+			filter: "",
 			recent: [
 				{
 					author: "",
@@ -62,6 +60,9 @@ export default class Latest extends React.Component<Props, State> {
 			],
 		};
 	}
+
+	TagList: string[] = ["challenge", "solution", "personal", "work", "study"];
+
 	componentDidMount() {
 		this.latestPosts();
 	}
@@ -84,7 +85,26 @@ export default class Latest extends React.Component<Props, State> {
 		let json = await response.json();
 		let sorted = this.sortRecent(json.posts);
 		this.setState({ recent: sorted });
-		console.log(this.state.recent);
+		this.setState({ filter: "" });
+		console.log("latest posts pulled", sorted);
+	};
+
+	filterPosts = async () => {
+		let response = await fetch(`${APIURL}/post/all`, {
+			headers: new Headers({
+				"Content-Type": "application/json",
+				Authorization: `${this.props.coin}`,
+			}),
+		});
+		let json = await response.json();
+		let posts = json.posts;
+		let tagged: Post[] = [];
+		posts.map((tag: Post) => {
+			if (tag.tags.includes(`${this.state.filter}`) === true) {
+				tagged.push(tag);
+			}
+		});
+		this.setState({ recent: tagged });
 	};
 
 	sortRecent(arr: Post[]) {
@@ -92,11 +112,54 @@ export default class Latest extends React.Component<Props, State> {
 		arr.reverse();
 		return arr;
 	}
-
 	setExpand = (expandValue: boolean, value?: number | undefined) => {
 		this.setState({ expandPostId: value });
 		this.setState({ expandToggle: expandValue });
 	};
+	handleFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+		this.setState({ filter: event.target.value as string });
+		console.log(event.target.value as string);
+	};
+	/* 
+	renderPosts() {
+		if (this.state.recent.length !== (undefined || 0)) {
+			this.state.recent.map((post) => {
+				return (
+					<Card key={post.id} className="latest-card">
+						<CardContent>
+							<Typography variant="h5" component="h2">
+								{post.title}
+								{"   "}
+								{post.edited ? "(edited)" : ""}
+							</Typography>
+							<Typography color="textSecondary">
+								{post.author}, {this.reformatDate(post.createdAt)}
+							</Typography>
+							<Typography variant="body2" component="p">
+								{post.body}
+							</Typography>
+							<Typography variant="body2" component="p">
+								{post.tags.map((tag) => {
+									return (
+										<span key={tag}>
+											<Chip label={tag} />
+										</span>
+									);
+								})}
+							</Typography>
+						</CardContent>
+						<CardActions>
+							<Button onClick={() => this.setExpand(true, post.id)}>
+								view full post
+							</Button>
+						</CardActions>
+					</Card>
+				);
+			});
+		} else {
+			return <h1>no results!</h1>;
+		}
+	} */
 
 	render() {
 		return (
@@ -128,42 +191,43 @@ export default class Latest extends React.Component<Props, State> {
 				)}
 				<h3>
 					<u>Latest Posts </u>
-					<Button onClick={() => this.latestPosts()}>refresh</Button>
 				</h3>
+				<span>
+					<Button onClick={() => this.latestPosts()}>refresh</Button>
+
+					<FormControl>
+						<InputLabel id="filter-posts">filter</InputLabel>
+						<Select
+							labelId="filter-posts"
+							id="select-filter-posts"
+							value={this.state.filter}
+							onChange={this.handleFilterChange}
+							labelWidth={20}
+						>
+							{this.TagList.map((tag) => {
+								return <MenuItem value={`${tag}`}>{tag}</MenuItem>;
+							})}
+						</Select>
+					</FormControl>
+					<Button onClick={() => this.filterPosts()}>search</Button>
+				</span>
+
 				<div>
-					{this.state.recent.map((post) => {
-						return (
-							<Card key={post.id} className="latest-card">
-								<CardContent>
-									<Typography variant="h5" component="h2">
-										{post.title}
-										{"   "}
-										{post.edited ? "(edited)" : ""}
-									</Typography>
-									<Typography color="textSecondary">
-										{post.author}, {this.reformatDate(post.createdAt)}
-									</Typography>
-									<Typography variant="body2" component="p">
-										{post.body}
-									</Typography>
-									<Typography variant="body2" component="p">
-										{post.tags.map((tag) => {
-											return (
-												<span key={tag}>
-													<Chip label={tag} />
-												</span>
-											);
-										})}
-									</Typography>
-								</CardContent>
-								<CardActions>
-									<Button onClick={() => this.setExpand(true, post.id)}>
-										view full post
-									</Button>
-								</CardActions>
-							</Card>
-						);
-					})}
+					{this.state.recent.length !== (undefined || 0) ? (
+						<PostDisplay
+							recent={this.state.recent}
+							setExpand={this.setExpand}
+						/>
+					) : (
+						<Card>
+							<CardContent>
+								<Typography variant="h5" component="h2">
+									{" "}
+									no posts to show.{" "}
+								</Typography>
+							</CardContent>
+						</Card>
+					)}
 				</div>
 			</div>
 		);

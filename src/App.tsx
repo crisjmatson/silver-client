@@ -48,32 +48,25 @@ export default class App extends React.Component {
 						</div>
 						<Container className="landing-auth-div" maxWidth="sm">
 							{this.state.auth ? (
-								<span></span>
-							) : (
-								<Button
-									className="landing-logo-button"
-									onClick={() => this.toggleAuth()}
-									variant="contained"
-								>
-									click to login
-								</Button>
-							)}
-							{this.state.auth ? (
-								<Card className="landing-auth-card">
-									<Auth
-										coin={this.state.coin}
-										setCoin={this.setCoin}
-										currentuser={this.state.currentuser}
-										setCoinName={this.setCoinName}
-										setAdmin={this.setAdmin}
-									/>
-									<Button onClick={() => this.toggleAuth()}>
-										click to cancel
-									</Button>
-								</Card>
+								<Auth
+									coin={this.state.coin}
+									setCoin={this.setCoin}
+									currentuser={this.state.currentuser}
+									setCoinName={this.setCoinName}
+									setAdmin={this.setAdmin}
+									toggleAuth={this.toggleAuth}
+									auth={this.state.auth}
+								/>
 							) : (
 								<span></span>
 							)}
+							<Button
+								className="landing-logo-button"
+								onClick={() => this.toggleAuth()}
+								variant="contained"
+							>
+								click to login
+							</Button>
 						</Container>
 						<div className="landing-box-trio">
 							<Grid

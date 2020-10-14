@@ -1,4 +1,4 @@
-import { Button, FormGroup, TextField } from "@material-ui/core";
+import { Button, Dialog, FormGroup, TextField, Slide } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid/Grid";
 import Paper from "@material-ui/core/Paper/Paper";
 import { Form, Formik } from "formik";
@@ -6,16 +6,18 @@ import * as React from "react";
 import APIURL from "../../helpers/environment";
 import AdminAuth from "./AdminAuth";
 import "./Authenticate.css";
-//import img from '../../../public/BasicLogoFill.png'
+import { TransitionProps } from "@material-ui/core/transitions/transition";
 
-interface authProps {
+interface Props {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName: (name: string) => void;
 	setAdmin: (status: boolean) => void;
+	toggleAuth: () => void;
+	auth: boolean;
 	currentuser: string | undefined;
 	coin: string | undefined;
 }
-interface authState {
+interface State {
 	admin: boolean;
 	toggle: boolean;
 }
@@ -25,11 +27,15 @@ interface authValues {
 	password: string;
 }
 
-export default class Authenticate extends React.Component<
-	authProps,
-	authState
-> {
-	state: authState = {
+const Transition = React.forwardRef(function Transition(
+	props: TransitionProps & { children?: React.ReactElement<any, any> },
+	ref: React.Ref<unknown>
+) {
+	return <Slide direction="up" ref={ref} {...props} />;
+});
+
+export default class Authenticate extends React.Component<Props, State> {
+	state: State = {
 		admin: false,
 		toggle: false,
 	};
@@ -97,79 +103,86 @@ export default class Authenticate extends React.Component<
 	render() {
 		return (
 			<div className="authenticate-div">
-				
-				{this.state.admin ? (
-					<AdminAuth
-						closeAdmin={this.closeAdmin}
-						coin={this.props.coin}
-						setCoin={this.props.setCoin}
-						currentuser={this.props.currentuser}
-						setCoinName={this.props.setCoinName}
-						setAdmin={this.props.setAdmin}
-					/>
-				) : (
-					<FormGroup>
-						<Formik
-							initialValues={{ email: "", username: "", password: "" }}
-							onSubmit={(values) => {
-								this.state.toggle
-									? this.signUpFetch(values)
-									: this.signInFetch(values);
-							}}
-						>
-							{({ values, handleChange, handleBlur }) => (
-								<Form>
-									{this.state.toggle ? (
+				<Dialog className="authenticate-dialog"
+					TransitionComponent={Transition}
+					open={this.props.auth}
+					onBackdropClick={() => this.props.toggleAuth()}
+					aria-labelledby="alert-dialog-slide-title"
+					aria-describedby="alert-dialog-slide-description"
+				>
+					{this.state.admin ? (
+						<AdminAuth
+							closeAdmin={this.closeAdmin}
+							coin={this.props.coin}
+							setCoin={this.props.setCoin}
+							currentuser={this.props.currentuser}
+							setCoinName={this.props.setCoinName}
+							setAdmin={this.props.setAdmin}
+						/>
+					) : (
+						<FormGroup>
+							<Formik
+								initialValues={{ email: "", username: "", password: "" }}
+								onSubmit={(values) => {
+									this.state.toggle
+										? this.signUpFetch(values)
+										: this.signInFetch(values);
+								}}
+							>
+								{({ values, handleChange, handleBlur }) => (
+									<Form>
+										{this.state.toggle ? (
+											<div>
+												<TextField
+													name="email"
+													placeholder="email"
+													value={values.email}
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+											</div>
+										) : (
+											<span></span>
+										)}
 										<div>
 											<TextField
-												name="email"
-												placeholder="email"
-												value={values.email}
+												name="username"
+												placeholder="username"
+												value={values.username}
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
 										</div>
-									) : (
-										<span></span>
-									)}
-									<div>
-										<TextField
-											name="username"
-											placeholder="username"
-											value={values.username}
-											onChange={handleChange}
-											onBlur={handleBlur}
-										/>
-									</div>
-									<div>
-										<TextField
-											name="password"
-											placeholder="password"
-											value={values.password}
-											onChange={handleChange}
-											onBlur={handleBlur}
-										/>
-									</div>
-									<Button type="submit">
-										{this.state.toggle ? "--sign up--" : "--sign in--"}
-									</Button>
-									<br />
-									<br />
-									<br />
-									<br />
-									<Button onClick={() => this.toggleSign()}>
-										{this.state.toggle ? "back to sign in" : "first time?"}
-									</Button>
-									{"		"}
-									<Button onClick={() => this.setState({ admin: true })}>
-										ADMIN
-									</Button>
-									{/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
-								</Form>
-							)}
-						</Formik>
-					</FormGroup>
-				)}
+										<div>
+											<TextField
+												name="password"
+												placeholder="password"
+												value={values.password}
+												onChange={handleChange}
+												onBlur={handleBlur}
+											/>
+										</div>
+										<Button type="submit">
+											{this.state.toggle ? "--sign up--" : "--sign in--"}
+										</Button>
+										<br />
+										<br />
+										<br />
+										<br />
+										<Button onClick={() => this.toggleSign()}>
+											{this.state.toggle ? "back to sign in" : "first time?"}
+										</Button>
+										{"		"}
+										<Button onClick={() => this.setState({ admin: true })}>
+											ADMIN
+										</Button>
+										{/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+									</Form>
+								)}
+							</Formik>
+						</FormGroup>
+					)}
+				</Dialog>
 			</div>
 		);
 	}

@@ -43,3 +43,6 @@ export interface Comment {
 	updatedAt: string;
 	userId: number;
 }
+export interface Tag {
+	tagName: { value: boolean; tagName: string };
+}

@@ -28,8 +28,8 @@ interface State {
 	edit: boolean;
 	delete: boolean;
 	grad_status: unknown;
-	user: User;
-	profile: Profile;
+	/* 	user: User;
+	profile: Profile; */
 }
 export default class Navigation extends React.Component<Props, State> {
 	constructor(props: Props) {
@@ -40,82 +40,7 @@ export default class Navigation extends React.Component<Props, State> {
 			profileReady: true,
 			edit: false,
 			delete: false,
-			user: {
-				createdAt: "",
-				email: "",
-				id: 999999999999,
-				password: "",
-				role: "",
-				updatedAt: "",
-				username: "",
-			},
-			profile: {
-				avatar: "",
-				challenges_completed: 0,
-				createdAt: "",
-				date_graduated: "",
-				grad_status: "",
-				id: 999999999999,
-				updatedAt: "",
-				userId: 999999999999,
-			},
 		};
-	}
-
-	componentDidMount() {
-		this.accountFetch();
-	}
-
-	accountFetch = () => {
-		fetch(`${APIURL}/user/view`, {
-			method: "GET",
-			headers: new Headers({
-				"Content-Type": "application/json",
-				Authorization: `${this.props.coin}`,
-			}),
-		})
-			.then((response) => response.json())
-			.then((json) => {
-				this.setState({ user: json.user });
-				console.log("user set");
-			})
-			.then(() => this.profileFetch());
-	};
-	profileFetch() {
-		fetch(`${APIURL}/profile/view`, {
-			method: "GET",
-			headers: new Headers({
-				"Content-Type": "application/json",
-				Authorization: `${this.props.coin}`,
-			}),
-		})
-			.then((response) => response.json())
-			.then((json) =>
-				json.error
-					? this.profileCreate()
-					: this.setState({ profile: json.user })
-			);
-		console.log("profile set");
-	}
-	profileCreate() {
-		let blank = {
-			profile: {
-				avatar: "",
-				grad_status: "",
-				date_graduated: "",
-			},
-		};
-		fetch(`${APIURL}/profile`, {
-			method: "POST",
-			headers: new Headers({
-				"Content-Type": "application/json",
-				Authorization: `${this.props.coin}`,
-			}),
-			body: JSON.stringify(blank),
-		})
-			.then((response) => response.json())
-			.then((json) => this.setState({ profile: json.user }));
-		console.log("profile set");
 	}
 
 	handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -157,9 +82,6 @@ export default class Navigation extends React.Component<Props, State> {
 								<MenuItem onClick={() => this.handleClose()}>
 									<Link to="/viewprofile">Account</Link>
 								</MenuItem>
-								{/* <MenuItem onClick={() => this.handleClose()}>
-									<Link to="/profile">Profile</Link>
-								</MenuItem> */}
 							</Menu>
 							<Typography variant="h6">
 								{this.props.adminStatus ? "ADMIN" : "Wesch"}
@@ -168,7 +90,7 @@ export default class Navigation extends React.Component<Props, State> {
 								color="inherit"
 								onClick={() => {
 									this.props.setCoin(undefined);
-									this.refreshPage(); //  reload(true);
+									this.refreshPage();
 								}}
 							>
 								Logout
@@ -193,8 +115,6 @@ export default class Navigation extends React.Component<Props, State> {
 								setCoinName={this.props.setCoinName}
 								coin={this.props.coin}
 								setCoin={this.props.setCoin}
-								userAccount={this.state.user}
-								userProfile={this.state.profile}
 							/>
 						</Route>
 					</Switch>

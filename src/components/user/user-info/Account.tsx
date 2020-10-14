@@ -15,10 +15,11 @@ import EditAcct from "./EditAcct";
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName: (name: string) => void;
+	refresh: () => void;
 	currentuser: string;
 	coin: string | undefined;
-	userAccount: User;
-	userProfile: Profile;
+	account: User;
+	profile: Profile;
 }
 
 interface State {
@@ -37,6 +38,9 @@ export default class Account extends Component<Props, State> {
 			delete: false,
 			date: null,
 		};
+	}
+	componentDidUpdate() {
+		//this.props.refresh();
 	}
 	reformatDate(rawDate: string) {
 		let month = rawDate.slice(5, 7);
@@ -75,10 +79,11 @@ export default class Account extends Component<Props, State> {
 						setCoinName={this.props.setCoinName}
 						coin={this.props.coin}
 						setCoin={this.props.setCoin}
-						userAccount={this.props.userAccount}
-						userProfile={this.props.userProfile}
+						account={this.props.account}
+						profile={this.props.profile}
 						toggleEdit={this.toggleEdit}
 						toggleDelete={this.toggleDelete}
+						refresh={this.props.refresh}
 					/>
 				) : (
 					/* ----------------- !!  DEFAULT ACCOUNT VIEW  !! ----------------- */
@@ -97,58 +102,18 @@ export default class Account extends Component<Props, State> {
 										component="p"
 									>
 										<ul>
-											<li>
-												email -
-												{this.props.userAccount === undefined
-													? "n/a"
-													: this.props.userAccount.email}
-												<Button
-													onClick={() =>
-														console.log(this.props.userAccount.email)
-													}
-												>
-													show
-												</Button>
-											</li>
+											<li>email -{this.props.account.email}</li>
 											<li>
 												joined -{" "}
-												{this.props.userAccount === undefined
-													? "n/a"
-													: this.reformatDate(this.props.userAccount.createdAt)}
-												<Button
-													onClick={() =>
-														console.log(this.props.userAccount.createdAt)
-													}
-												>
-													show
-												</Button>
+												{this.reformatDate(this.props.account.createdAt)}
 											</li>
 											<li>
-												status -{" "}
-												{this.props.userProfile !== undefined
-													? this.props.userProfile.grad_status
-													: "not available"}
-												<Button
-													onClick={() =>
-														console.log(this.props.userProfile.grad_status)
-													}
-												>
-													show
-												</Button>
+												status -
+												{this.props.profile.grad_status == ""
+													? "not available"
+													: this.props.profile.grad_status}
 											</li>
-											<li>
-												graduated -{" "}
-												{this.props.userProfile !== undefined
-													? this.props.userProfile.date_graduated
-													: "not available"}
-												<Button
-													onClick={() =>
-														console.log(this.props.userProfile.date_graduated)
-													}
-												>
-													show
-												</Button>
-											</li>
+											<li>graduated - {this.props.profile.date_graduated}</li>
 										</ul>
 									</Typography>
 								</CardContent>

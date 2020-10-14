@@ -1,22 +1,23 @@
 import DateFnsUtils from "@date-io/date-fns";
 import {
-    Button,
-    Card,
-    CardActionArea,
-    CardActions,
-    CardContent,
-    FormControl,
-    FormGroup,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-    Typography
+	Button,
+	Card,
+	CardActionArea,
+	CardActions,
+	CardContent,
+	FormControl,
+	FormGroup,
+	InputLabel,
+	MenuItem,
+	Select,
+	TextField,
+	Typography,
 } from "@material-ui/core";
 import {
-    KeyboardDatePicker,
-    MuiPickersUtilsProvider
+	KeyboardDatePicker,
+	MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import "date-fns";
 import { Form, Formik } from "formik";
 import React, { Component } from "react";
@@ -28,12 +29,12 @@ interface Props {
 	setCoinName: (name: string) => void;
 	toggleEdit: () => void;
 	toggleDelete: (value: boolean) => void;
+	refresh: () => void;
 	currentuser: string;
 	coin: string | undefined;
-	userAccount: User;
-	userProfile: Profile;
+	account: User;
+	profile: Profile;
 }
-
 interface State {
 	date: Date | null;
 }
@@ -45,7 +46,6 @@ export default class EditAcct extends Component<Props, State> {
 			date: null,
 		};
 	}
-
 	reformatDate(rawDate: string) {
 		let month = rawDate.slice(5, 7);
 		let day = rawDate.slice(8, 10);
@@ -53,27 +53,92 @@ export default class EditAcct extends Component<Props, State> {
 		let formatDate = `${month}/${day}/${year}`;
 		return formatDate;
 	}
-	handleDateChange = (date: Date | null) => {
+	handleDateChange = (
+		date: MaterialUiPickersDate,
+		value?: string | null | undefined
+	) => {
 		this.setState({ date: date });
 	};
-
-	accountUpdate = (updates: { email: string }) => {
-		console.log("account update", updates);
-		let date = this.state.date;
-		fetch(`${APIURL}/user/update`, {
-			method: "PUT",
-			headers: new Headers({
-				"Content-Type": "application/json",
-				Authorization: `${this.props.coin}`,
-			}),
-			body: JSON.stringify({
-				user: {
-					mail: updates.email,
-				},
-			}),
-		})
-			.then((response) => response.json())
-			.then((json) => console.log(json));
+	accountUpdate = (updates: { email: string; grad_status: string }) => {
+		console.log("account update: ", updates);
+		if (updates.email.length > 0) {
+			console.log("email update called");
+			fetch(`${APIURL}/user/update`, {
+				method: "PUT",
+				headers: new Headers({
+					"Content-Type": "application/json",
+					Authorization: `${this.props.coin}`,
+				}),
+				body: JSON.stringify({
+					user: {
+						mail: updates.email,
+					},
+				}),
+			})
+				.then((response) => response.json())
+				.then(() => {
+					this.props.refresh();
+					this.props.toggleEdit();
+				});
+		}
+		if (updates.grad_status.length > 0 && this.state.date !== null) {
+			console.log("dual profile update called");
+			fetch(`${APIURL}/profile/update`, {
+				method: "PUT",
+				headers: new Headers({
+					"Content-Type": "application/json",
+					Authorization: `${this.props.coin}`,
+				}),
+				body: JSON.stringify({
+					profile: {
+						grad_status: updates.grad_status,
+						date_graduated: this.state.date,
+					},
+				}),
+			})
+				.then((response) => response.json())
+				.then(() => {
+					this.props.refresh();
+					this.props.toggleEdit();
+				});
+		} else if (updates.grad_status.length > 0 && this.state.date === null) {
+			fetch(`${APIURL}/profile/update`, {
+				method: "PUT",
+				headers: new Headers({
+					"Content-Type": "application/json",
+					Authorization: `${this.props.coin}`,
+				}),
+				body: JSON.stringify({
+					profile: {
+						grad_status: updates.grad_status,
+					},
+				}),
+			})
+				.then((response) => response.json())
+				.then((json) => {
+					console.log(json);
+					this.props.refresh();
+					this.props.toggleEdit();
+				});
+		} else if (updates.grad_status.length === 0 && this.state.date !== null) {
+			fetch(`${APIURL}/profile/update`, {
+				method: "PUT",
+				headers: new Headers({
+					"Content-Type": "application/json",
+					Authorization: `${this.props.coin}`,
+				}),
+				body: JSON.stringify({
+					profile: {
+						date_graduated: this.state.date,
+					},
+				}),
+			})
+				.then((response) => response.json())
+				.then(() => {
+					this.props.toggleEdit();
+					this.props.refresh();
+				});
+		}
 	};
 
 	render() {
@@ -96,8 +161,7 @@ export default class EditAcct extends Component<Props, State> {
 											grad_status: "",
 										}}
 										onSubmit={(values) => {
-											console.log(values);
-											//this.dualUpdate(values);
+											this.accountUpdate(values);
 										}}
 									>
 										{({ values, handleChange, handleBlur }) => (
@@ -105,7 +169,7 @@ export default class EditAcct extends Component<Props, State> {
 												<FormControl>
 													<TextField
 														name="email"
-														placeholder={this.props.userAccount.email}
+														placeholder={this.props.account.email}
 														value={values.email}
 														onChange={handleChange}
 														onBlur={handleBlur}
@@ -118,7 +182,7 @@ export default class EditAcct extends Component<Props, State> {
 														name="grad_status"
 														labelId="status-label"
 														id="status"
-														placeholder={this.props.userProfile.grad_status}
+														placeholder={this.props.profile.grad_status}
 														value={values.grad_status}
 														onChange={handleChange}
 														label="Status"
@@ -138,7 +202,7 @@ export default class EditAcct extends Component<Props, State> {
 													</Select>
 												</FormControl>
 												<br />
-												{this.props.userProfile.grad_status === "alumni" ? (
+												{this.props.profile.grad_status === "alumni" ? (
 													<MuiPickersUtilsProvider utils={DateFnsUtils}>
 														<InputLabel id="date_graduated-label">
 															Date Graduated
@@ -149,7 +213,7 @@ export default class EditAcct extends Component<Props, State> {
 															margin="normal"
 															label="Date-Graduated"
 															format="MM/dd/yyyy"
-															value={this.state.date}
+															value={this.state.date || null}
 															onChange={this.handleDateChange}
 															KeyboardButtonProps={{
 																"aria-label": "change date",

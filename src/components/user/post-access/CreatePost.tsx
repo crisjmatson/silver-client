@@ -18,6 +18,9 @@ import {
 	Chip,
 } from "@material-ui/core";
 import DoneIcon from "@material-ui/icons/Done";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -34,20 +37,38 @@ interface State {
 	personal: boolean;
 	work: boolean;
 	study: boolean;
+	snackBarToggle: boolean;
+	snackBarMessage: string;
 }
 
 export default class CreatePost extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
+			snackBarToggle: false,
 			postPrivacy: false,
 			challenge: false,
 			solution: false,
 			personal: false,
 			work: false,
 			study: false,
+			snackBarMessage: "",
 		};
 	}
+	snackClick = () => {
+		let opposite = this.state.snackBarToggle;
+		this.setState({ snackBarToggle: !opposite });
+	};
+	handleSnackClose = (
+		event: React.SyntheticEvent | React.MouseEvent,
+		reason?: string
+	) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		this.setState({ snackBarToggle: false });
+	};
 
 	handleSwitchChange = () => {
 		let opposite = this.state.postPrivacy;
@@ -84,38 +105,59 @@ export default class CreatePost extends React.Component<Props, State> {
 		body: string;
 		privacy: boolean;
 	}) => {
-		let tagSubmit: any[] = [];
-		let tags = [
-			{ value: this.state.challenge, tagName: "challenge" },
-			{ value: this.state.solution, tagName: "solution" },
-			{ value: this.state.personal, tagName: "personal" },
-			{ value: this.state.work, tagName: "work" },
-			{ value: this.state.study, tagName: "study" },
-		];
-		tags.map((tag) => {
-			if (tag.value === true) {
-				tagSubmit.push(tag.tagName);
+		if ((values.title.length || values.body.length) === 0) {
+			this.setState({ snackBarMessage: "Title & Body required for post." });
+			return this.snackClick();
+		} else {
+			let tagSubmit: any[] = [];
+			let tags = [
+				{ value: this.state.challenge, tagName: "challenge" },
+				{ value: this.state.solution, tagName: "solution" },
+				{ value: this.state.personal, tagName: "personal" },
+				{ value: this.state.work, tagName: "work" },
+				{ value: this.state.study, tagName: "study" },
+			];
+			tags.map((tag) => {
+				if (tag.value === true) {
+					tagSubmit.push(tag.tagName);
+				}
+			});
+			let postBody = {
+				post: {
+					title: values.title,
+					body: values.body,
+					private: this.state.postPrivacy,
+					tags: tagSubmit,
+				},
+			};
+			let result = await fetch(`${APIURL}/post`, {
+				method: "POST",
+				headers: new Headers({
+					"Content-Type": "application/json",
+					Authorization: `${this.props.coin}`,
+				}),
+				body: JSON.stringify(postBody),
+			});
+			let json = await result.json();
+			if (json.error) {
+				this.setState({ snackBarMessage: "Error while publishing post" });
+				this.snackClick();
+			} else {
+				this.clearForm();
+				this.setState({ snackBarMessage: "Post created!" });
+				this.snackClick();
 			}
+			this.props.latestPosts();
+		}
+	};
+	clearForm = () => {
+		this.setState({
+			challenge: false,
+			solution: false,
+			personal: false,
+			work: false,
+			study: false,
 		});
-		let postBody = {
-			post: {
-				title: values.title,
-				body: values.body,
-				private: this.state.postPrivacy,
-				tags: tagSubmit,
-			},
-		};
-		let result = await fetch(`${APIURL}/post`, {
-			method: "POST",
-			headers: new Headers({
-				"Content-Type": "application/json",
-				Authorization: `${this.props.coin}`,
-			}),
-			body: JSON.stringify(postBody),
-		});
-		let json = await result.json();
-		console.log(json);
-		this.props.latestPosts();
 	};
 
 	render() {
@@ -123,12 +165,24 @@ export default class CreatePost extends React.Component<Props, State> {
 			<Box>
 				<Formik
 					initialValues={{ title: "", body: "", privacy: false }}
-					onSubmit={(values, actions) => {
-						//console.log({ values, actions });
+					onSubmit={(
+						values,
+						{ setSubmitting, setErrors, setStatus, resetForm }
+					) => {
 						this.postPost(values);
+						resetForm({});
 					}}
 				>
-					{({ values, handleChange, handleBlur }) => (
+					{({
+						errors,
+						handleSubmit,
+						handleChange,
+						handleBlur,
+						isSubmitting,
+						isValid,
+						status,
+						values,
+					}) => (
 						<Form className="post-form-box">
 							<label htmlFor="title">Title</label>
 							<TextField
@@ -137,6 +191,7 @@ export default class CreatePost extends React.Component<Props, State> {
 								placeholder="Title"
 								onChange={handleChange}
 								onBlur={handleBlur}
+								value={values.title || ""}
 							/>
 							<br />
 							<label htmlFor="body">Post </label>
@@ -146,6 +201,7 @@ export default class CreatePost extends React.Component<Props, State> {
 								placeholder="enter post here..."
 								onChange={handleChange}
 								onBlur={handleBlur}
+								value={values.body || ""}
 							/>
 							<br />
 							<div>
