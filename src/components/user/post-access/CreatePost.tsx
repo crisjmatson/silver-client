@@ -21,6 +21,12 @@ import DoneIcon from "@material-ui/icons/Done";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import {
+	Image,
+	Video,
+	Transformation,
+	CloudinaryContext,
+} from "../../CloudinaryTypes";
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -250,6 +256,8 @@ export default class CreatePost extends React.Component<Props, State> {
 								}
 								label="Private?"
 							/>
+							<br />
+
 							<br />
 							<Button type="submit">Submit</Button>
 						</Form>

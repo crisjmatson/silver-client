@@ -2,6 +2,7 @@ import { Button, FormGroup, TextField } from "@material-ui/core";
 import { Formik, Form, FormikValues } from "formik";
 import React, { Component } from "react";
 import APIURL from "../../helpers/environment";
+import "./Authenticate.css";
 
 interface Props {
 	closeAdmin: () => void;
@@ -110,8 +111,7 @@ export default class AdminAuth extends Component<Props, State> {
 
 	render() {
 		return (
-			<div>
-				<h1>ADMIN AUTH</h1>
+			<div className="authenticate-formik">
 				<FormGroup>
 					<Formik
 						initialValues={{
@@ -130,6 +130,7 @@ export default class AdminAuth extends Component<Props, State> {
 								{this.state.signToggle ? (
 									<div>
 										<TextField
+											className="authenticate-formik-input"
 											name="authorization"
 											placeholder="authorization"
 											value={values.authorization}
@@ -138,6 +139,7 @@ export default class AdminAuth extends Component<Props, State> {
 										/>
 										<br />
 										<TextField
+											className="authenticate-formik-input"
 											name="email"
 											placeholder="email"
 											value={values.email}
@@ -150,6 +152,7 @@ export default class AdminAuth extends Component<Props, State> {
 								)}
 								<div>
 									<TextField
+										className="authenticate-formik-input"
 										name="username"
 										placeholder="username"
 										value={values.username}
@@ -159,6 +162,7 @@ export default class AdminAuth extends Component<Props, State> {
 								</div>
 								<div>
 									<TextField
+										className="authenticate-formik-input"
 										name="password"
 										placeholder="password"
 										value={values.password}
@@ -174,8 +178,6 @@ export default class AdminAuth extends Component<Props, State> {
 								</Button>
 								<br />
 								<Button onClick={() => this.props.closeAdmin()}>cancel</Button>
-								<br />
-								<br />
 								<br />
 								<Button
 									onClick={() => {

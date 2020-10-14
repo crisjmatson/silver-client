@@ -103,7 +103,8 @@ export default class Authenticate extends React.Component<Props, State> {
 	render() {
 		return (
 			<div className="authenticate-div">
-				<Dialog className="authenticate-dialog"
+				<Dialog
+					className="authenticate-dialog"
 					TransitionComponent={Transition}
 					open={this.props.auth}
 					onBackdropClick={() => this.props.toggleAuth()}
@@ -120,67 +121,76 @@ export default class Authenticate extends React.Component<Props, State> {
 							setAdmin={this.props.setAdmin}
 						/>
 					) : (
-						<FormGroup>
-							<Formik
-								initialValues={{ email: "", username: "", password: "" }}
-								onSubmit={(values) => {
-									this.state.toggle
-										? this.signUpFetch(values)
-										: this.signInFetch(values);
-								}}
-							>
-								{({ values, handleChange, handleBlur }) => (
-									<Form>
-										{this.state.toggle ? (
+						<div className="authenticate-formik">
+							<FormGroup>
+								<Formik
+									initialValues={{ email: "", username: "", password: "" }}
+									onSubmit={(values) => {
+										this.state.toggle
+											? this.signUpFetch(values)
+											: this.signInFetch(values);
+									}}
+								>
+									{({ values, handleChange, handleBlur }) => (
+										<Form>
+											{this.state.toggle ? (
+												<div>
+													<TextField
+														className="authenticate-formik-input"
+														fullWidth={true}
+														name="email"
+														placeholder="email"
+														value={values.email}
+														onChange={handleChange}
+														onBlur={handleBlur}
+													/>
+												</div>
+											) : (
+												<span></span>
+											)}
 											<div>
 												<TextField
-													name="email"
-													placeholder="email"
-													value={values.email}
+													className="authenticate-formik-input"
+													name="username"
+													placeholder="username"
+													value={values.username}
 													onChange={handleChange}
 													onBlur={handleBlur}
 												/>
 											</div>
-										) : (
-											<span></span>
-										)}
-										<div>
-											<TextField
-												name="username"
-												placeholder="username"
-												value={values.username}
-												onChange={handleChange}
-												onBlur={handleBlur}
-											/>
-										</div>
-										<div>
-											<TextField
-												name="password"
-												placeholder="password"
-												value={values.password}
-												onChange={handleChange}
-												onBlur={handleBlur}
-											/>
-										</div>
-										<Button type="submit">
-											{this.state.toggle ? "--sign up--" : "--sign in--"}
-										</Button>
-										<br />
-										<br />
-										<br />
-										<br />
-										<Button onClick={() => this.toggleSign()}>
-											{this.state.toggle ? "back to sign in" : "first time?"}
-										</Button>
-										{"		"}
-										<Button onClick={() => this.setState({ admin: true })}>
-											ADMIN
-										</Button>
-										{/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
-									</Form>
-								)}
-							</Formik>
-						</FormGroup>
+											<div>
+												<TextField
+													className="authenticate-formik-input"
+													name="password"
+													placeholder="password"
+													value={values.password}
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+											</div>
+											<Button type="submit">
+												{this.state.toggle ? "--sign up--" : "--sign in--"}
+											</Button>
+											<br />
+											<br />
+											<br />
+											<span>
+												<Button onClick={() => this.toggleSign()}>
+													{this.state.toggle
+														? "back to sign in"
+														: "first time?"}
+												</Button>
+												{"		"}
+												<Button onClick={() => this.setState({ admin: true })}>
+													ADMIN
+												</Button>
+											</span>
+											{/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+										</Form>
+									)}
+								</Formik>
+							</FormGroup>
+						</div>
 					)}
 				</Dialog>
 			</div>

@@ -7,9 +7,15 @@ import Entrance from "./components/user/Entrance";
 import Grid from "@material-ui/core/Grid/Grid";
 import Paper from "@material-ui/core/Paper/Paper";
 import Card from "@material-ui/core/Card/Card";
+import {
+	Image,
+	Video,
+	Transformation,
+	CloudinaryContext,
+} from "./components/CloudinaryTypes";
 
 export default class App extends React.Component {
-	weschContext = React.createContext(this.state);
+	//weschContext = React.createContext(this.state);
 	state = {
 		coin: "",
 		currentuser: "",

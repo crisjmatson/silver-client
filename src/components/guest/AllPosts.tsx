@@ -154,9 +154,12 @@ export default class AllPosts extends React.Component {
 										{" - "}
 										{this.reformatDate(post.createdAt)}
 									</Typography>
+									<br />
 									<Typography variant="body2" component="p">
 										{post.body}
 									</Typography>
+									<br />
+									<br />
 									<Divider variant="inset" component="li" />
 									{this.state.commentToggle &&
 									this.state.currentPost === post.id &&
