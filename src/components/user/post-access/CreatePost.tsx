@@ -149,7 +149,7 @@ export default class CreatePost extends React.Component<Props, State> {
 				this.setState({ snackBarMessage: "Error while publishing post" });
 				this.snackClick();
 			} else {
-				this.clearForm();
+				//this.clearForm();
 				this.setState({ snackBarMessage: "Post created!" });
 				this.snackClick();
 			}
