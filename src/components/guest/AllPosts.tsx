@@ -1,36 +1,48 @@
 import {
-	Accordion,
-	AccordionDetails,
 	AccordionSummary,
 	Button,
 	Card,
 	CardActions,
 	CardContent,
-	Container,
-	Typography,
+	Divider,
 	List,
 	ListItem,
-	ListItemText,
 	ListItemAvatar,
-	Divider,
+	ListItemText,
+	Typography,
 } from "@material-ui/core";
+import Chip from "@material-ui/core/Chip/Chip";
+import PersonIcon from "@material-ui/icons/Person";
+import Radium from "radium";
 import * as React from "react";
 import APIURL from "../../helpers/environment";
 import { Comment, Post } from "../InterfaceExports";
 import "./AllPosts.css";
-import PersonIcon from "@material-ui/icons/Person";
+
+const style = {
+	backgroundImage:
+		'url("https://images.unsplash.com/photo-1494067329533-4385a4867cd4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80")',
+	card: {
+		margin: "8%",
+	},
+	latestHeading: {
+		fontSize: "90px",
+		padding: ".5em .5em .5em 2em",
+		marginBottom: "-1em",
+		textShadow: "10px 10px black",
+	},
+};
 
 interface State {
 	panel: string;
 	expanded: string;
 	list: Post[];
 	comments: Comment[];
-	test: any;
 	commentToggle: boolean;
 	currentPost: number;
 }
 
-export default class AllPosts extends React.Component {
+class AllPosts extends React.Component {
 	reformatDate(rawDate: string) {
 		let month = rawDate.slice(5, 7);
 		let day = rawDate.slice(8, 10);
@@ -44,7 +56,6 @@ export default class AllPosts extends React.Component {
 		expanded: "",
 		currentPost: 99999999,
 		commentToggle: false,
-		test: "starter",
 		list: [
 			{
 				author: "",
@@ -80,33 +91,6 @@ export default class AllPosts extends React.Component {
 			.then((json) => json.posts)
 			.then((arr) => this.sortRecent(arr));
 	}
-
-	/* getName(num: number): string {
-		let nameReturn;
-		const gone: string = "d-e-l-e-t-e-d";
-		if (num === null) {
-			return (nameReturn = gone);
-		} else {
-			fetch(`${APIURL}/user/${num}`, {
-				method: "GET",
-				headers: new Headers({
-					"Content-Type": "application/json",
-				}),
-			})
-				.then((response) => response.json())
-				.then((name) => {
-					//console.log(name);
-					if (name.error) {
-						return (nameReturn = gone);
-					} else {
-						return (nameReturn = name);
-					}
-				});
-			//return nameReturn;
-		}
-		//return nameReturn;
-	} */
-
 	sortRecent(arr: Post[]) {
 		arr.sort((a, b) => a.id - b.id);
 		arr.reverse();
@@ -123,7 +107,6 @@ export default class AllPosts extends React.Component {
 			method: "GET",
 		});
 		let json = await response.json();
-		console.log(json.comments);
 		this.setState({ comments: json.comments });
 		this.setState({ commentToggle: true });
 	};
@@ -139,15 +122,17 @@ export default class AllPosts extends React.Component {
 
 	render() {
 		return (
-			<Container className="guestpost-main">
-				<h1 className="guestpost-heading">LATEST POSTS: </h1>
+			<div className="guestpost-main" style={style}>
+				<h1 className="guestpost-heading" style={style.latestHeading}>
+					LATEST POSTS:{" "}
+				</h1>
 				{this.state.list.map((post: Post) => {
 					return (
-						<Card key={post.id} className="guestpost-Card">
+						<Card key={post.id} className="guestpost-Card" style={style.card}>
 							<CardContent>
 								<List>
-									<Typography variant="h5" component="h2">
-										{post.title}
+									<Typography>
+										<h1 className="allpost-title">{post.title}</h1>{" "}
 									</Typography>
 									<Typography color="textSecondary">
 										{post.author}
@@ -192,7 +177,10 @@ export default class AllPosts extends React.Component {
 									) : this.state.commentToggle &&
 									  this.state.currentPost === post.id &&
 									  this.state.comments.length === 0 ? (
-										<span>no comments</span>
+										<span className="allpost-emptyComment">
+											<br />
+											no comments
+										</span>
 									) : (
 										<span></span>
 									)}
@@ -226,13 +214,24 @@ export default class AllPosts extends React.Component {
 										>
 											<Typography>show comments</Typography>
 										</Button>
+										<span className="allpost-tag-span">
+											{post.tags.map((tag) => {
+												return (
+													<span key={tag} className="allpost-tag">
+														<Chip label={tag}></Chip>
+													</span>
+												);
+											})}
+										</span>
 									</AccordionSummary>
 								)}
 							</CardActions>
 						</Card>
 					);
 				})}
-			</Container>
+			</div>
 		);
 	}
 }
+
+export default Radium(AllPosts);

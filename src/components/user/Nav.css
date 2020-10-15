@@ -1,0 +1,16 @@
+.MuiToolbar-regular {
+	background-color: red;
+	display: inline-flexbox;
+	flex-flow: row nowrap;
+}
+.navlink-clicked-account {
+	align-self: center;
+}
+.navlink-clicked-posts {
+	align-self: center;
+}
+.navlink-clicked-logout {
+	align-self: center;
+	margin-left: auto;
+	margin-right: 0%;
+}

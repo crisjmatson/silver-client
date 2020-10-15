@@ -1,25 +1,36 @@
 import {
-	Card,
-	CardContent,
-	Typography,
-	Chip,
-	CardActions,
 	Button,
-	Divider,
+	Card,
+	CardActions,
+	CardContent,
+	Chip,
 	ListItem,
 	ListItemAvatar,
 	ListItemText,
+	Typography,
 } from "@material-ui/core";
+import PersonIcon from "@material-ui/icons/Person";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
-import { Post, Comment } from "../../InterfaceExports";
-import PersonIcon from "@material-ui/icons/Person";
+import { Comment, Post } from "../../InterfaceExports";
 
-export default class ViewPosts extends Component<any, any> {
+interface Props {
+	coin: string | undefined;
+	currentuser: string;
+}
+
+interface State {
+	currentPost: number;
+	commentToggle: boolean;
+	posts: Post[];
+	comments: Comment[];
+}
+
+export default class ViewPosts extends Component<Props, State> {
 	componentDidMount() {
 		this.userPostsFetch();
 	}
-	constructor(props: any) {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			currentPost: 999999999,
@@ -74,18 +85,19 @@ export default class ViewPosts extends Component<any, any> {
 				this.setState({ posts: json.posts });
 			});
 	};
+
 	fetchComments = async (postId: number) => {
 		this.setState({ currentPost: postId });
-		fetch(`${APIURL}/post/public_full/${postId}`, {
+		let response = await fetch(`${APIURL}/post/full/${postId}`, {
 			method: "GET",
-		})
-			.then((response) => response.json())
-			.then((json) => this.setState({ comments: json.comments }))
-			.then(() => this.setState({ commentToggle: true }));
-		/* let json = await response.json();
-		console.log(json.comments);
+			headers: new Headers({
+				"Content-Type": "application/json",
+				Authorization: `${this.props.coin}`,
+			}),
+		});
+		let json = await response.json();
 		this.setState({ comments: json.comments });
-		this.setState({ commentToggle: true }); */
+		this.setState({ commentToggle: true });
 	};
 
 	closeComments = () => {
@@ -111,23 +123,16 @@ export default class ViewPosts extends Component<any, any> {
 									<Typography variant="body2" component="p">
 										{post.body}
 									</Typography>
-									<Typography variant="body2" component="p">
-										{post.tags.map((tag) => {
-											return (
-												<span key={tag}>
-													<Chip label={tag} />
-												</span>
-											);
-										})}
-									</Typography>
-									{this.state.comments !== undefined ? (
-										this.state.commentToggle &&
-										this.state.currentPost === post.id &&
+
+									{/* COMMENT DISPLAY */}
+									<Typography>
+										{this.state.currentPost === post.id &&
+										this.state.commentToggle === true &&
 										this.state.comments.length > 0 ? (
 											this.state.comments.map((comment: Comment) => {
 												return (
 													<span>
-														<div key={comment.id}>
+														<ListItem key={comment.id}>
 															<ListItemAvatar>
 																<PersonIcon />
 															</ListItemAvatar>
@@ -144,21 +149,24 @@ export default class ViewPosts extends Component<any, any> {
 																	</React.Fragment>
 																}
 															/>
-														</div>
-														<Divider variant="inset" component="li" />
+														</ListItem>
 													</span>
 												);
 											})
-										) : this.state.commentToggle &&
-										  this.state.currentPost === post.id &&
-										  this.state.comments === (undefined || null) ? (
-											<span>no comments</span>
+										) : (this.state.commentToggle &&
+												this.state.currentPost === post.id &&
+												this.state.comments.length === 0) ||
+										  undefined ? (
+											<span>
+												<hr />
+												<ListItem>
+													<Typography>no comments</Typography>
+												</ListItem>
+											</span>
 										) : (
 											<span></span>
-										)
-									) : (
-										<span>no comments</span>
-									)}
+										)}
+									</Typography>
 								</CardContent>
 								<CardActions>
 									{this.state.commentToggle &&
@@ -170,7 +178,14 @@ export default class ViewPosts extends Component<any, any> {
 										<Button onClick={() => this.fetchComments(post.id)}>
 											view comments
 										</Button>
-									)}
+									)}{" "}
+									{post.tags.map((tag) => {
+										return (
+											<span key={tag}>
+												<Chip label={tag} />
+											</span>
+										);
+									})}
 								</CardActions>
 							</Card>
 						);

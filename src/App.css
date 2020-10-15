@@ -1,31 +1,41 @@
+/* font families: 
+
+font-family: 'Montserrat', sans-serif; -- looks like island of blue dolphins
+
+font-family: 'Open Sans', sans-serif; - classic simple sans
+
+font-family: 'Staatliches', cursive; -- bold font
+
+font-family: 'Oleo Script Swash Caps', cursive; -- script font
+
+*/
 .App {
-	text-align: center;
 	margin: -5px;
+	width: 100%;
 }
 .authenticate-outer-container {
 	background-color: black;
 }
-.landing-logo-div {
-	background-image: url("https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1651&q=80");
-	/* background-image: url("https://images.unsplash.com/photo-1572017876826-45ad407c7715?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1952&q=80"); */
-	background-size: cover;
+.landing-auth-div {
+	background-image: url("https://images.unsplash.com/photo-1531498860502-7c67cf02f657?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80");
+	background-size: 100%;
+	background-color: blue;
+	text-align: center;
+	justify-content: center;
+	width: 100%;
+	padding-bottom: 5em;
+	padding-top: 5em;
 }
 .landing-logo-img {
-	margin-top: 12em;
-	width: 80vw;
-}
-.landing-auth-div {
-	padding: 1em;
+	padding-top: 5em;
+	width: 80%;
 }
 .landing-logo-button {
-	margin: 2em;
-	color: white;
-	background-color: white;
+	margin: 5em;
 }
 .landing-box-trio {
-	background-image: url("https://images.unsplash.com/photo-1586557358044-e53dde045283?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80");
-	background-size: cover;
-	background-color: rgba(255, 255, 255, 0.3);
+	background-image: url("https://images.unsplash.com/photo-1582730790322-2e2f68c7183c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1867&q=80");
+	background-color: rgba(7, 34, 121, 0.913);
 	background-blend-mode: screen;
 	margin-top: 2em;
 }
@@ -35,7 +45,12 @@
 .box-trio {
 	background-color: black;
 	color: white;
-	padding: 1em;
+	padding: 3em;
+}
+.landing-box-trio-title {
+	font-family: "Open Sans", sans-serif;
+	text-align: center;
+	margin: 0.25em;
 }
 .entrance-container {
 	padding: 4em;

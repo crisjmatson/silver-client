@@ -4,8 +4,19 @@ import APIURL from "../../../helpers/environment";
 import { User, Profile } from "../../InterfaceExports";
 import ViewPosts from "./ViewPosts";
 
-export default class ViewProfile extends Component<any, any> {
-	constructor(props: any) {
+interface Props {
+	setCoin: (newCoin: string | undefined) => void;
+	setCoinName: (name: string) => void;
+	currentuser: string;
+	coin: string | undefined;
+}
+interface State {
+	user: User;
+	profile: Profile;
+}
+
+export default class ViewProfile extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			user: {

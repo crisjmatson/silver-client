@@ -1,7 +1,6 @@
-import { Button, Container } from "@material-ui/core";
 import * as React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import Navigation from "./Navigation";
+import Nav from "./Nav";
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -16,7 +15,7 @@ export default class Entrance extends React.Component<Props> {
 		return (
 			<div>
 				<Router>
-					<Navigation
+					<Nav
 						currentuser={this.props.currentuser}
 						setCoinName={this.props.setCoinName}
 						coin={this.props.coin}

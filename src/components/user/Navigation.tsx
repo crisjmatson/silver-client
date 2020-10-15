@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
 	AppBar,
 	Button,
@@ -9,11 +8,15 @@ import {
 	Toolbar,
 	Typography,
 } from "@material-ui/core";
-import { User, Profile } from "../InterfaceExports";
-import { Route, Link, Switch, Redirect } from "react-router-dom";
-import ViewProfile from "./user-info/ViewProfile";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import GrainIcon from "@material-ui/icons/Grain";
+import HomeIcon from "@material-ui/icons/Home";
+import WhatshotIcon from "@material-ui/icons/Whatshot";
+import * as React from "react";
+import { Link, Redirect, Route, Switch } from "react-router-dom";
 import PostView from "./post-access/PostView";
-import APIURL from "../../helpers/environment";
+import ViewProfile from "./user-info/ViewProfile";
+import Home from "./home/Home";
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -96,8 +99,28 @@ export default class Navigation extends React.Component<Props, State> {
 								Logout
 							</Button>
 						</Toolbar>
+						<Breadcrumbs aria-label="breadcrumb">
+							<Link to="/" color="inherit" href="/" /* onClick={handleClick} */>
+								<HomeIcon />
+								Material-UI
+							</Link>
+							<Link
+								to="/"
+								color="inherit"
+								href="/getting-started/installation/"
+								/* onClick={handleClick} */
+							>
+								<WhatshotIcon />
+								Core
+							</Link>
+							<Typography color="textPrimary">
+								<GrainIcon />
+								Breadcrumb
+							</Typography>
+						</Breadcrumbs>
 					</AppBar>
 					<Switch>
+						
 						<Route exact path="/postview">
 							<span>
 								<PostView

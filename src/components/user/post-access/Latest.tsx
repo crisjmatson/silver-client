@@ -1,23 +1,26 @@
 import {
 	Button,
 	Card,
-	CardActions,
 	CardContent,
-	Typography,
 	FormControl,
 	InputLabel,
-	Select,
 	MenuItem,
+	Select,
+	Typography,
 } from "@material-ui/core";
-import Chip from "@material-ui/core/Chip/Chip";
+import Radium from "radium";
 import * as React from "react";
 import APIURL from "../../../helpers/environment";
+import { Post } from "../../InterfaceExports";
 import CreatePost from "./CreatePost";
 import ExpandPost from "./ExpandPost";
 import "./Latest.css";
-import { Post } from "../../InterfaceExports";
 import PostDisplay from "./PostDisplay";
-import { addSyntheticLeadingComment } from "typescript";
+
+const style = {
+	filterSelect: { paddingTop: "1em", width: "4em", marginLeft: "80%" },
+	filterButton: { paddingTop: "3em" },
+};
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -33,11 +36,8 @@ interface State {
 	expandPostId: number | undefined;
 	filter: string;
 }
-/* interface Tags {
-	tags: string[];
-} */
 
-export default class Latest extends React.Component<Props, State> {
+class Latest extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
@@ -61,19 +61,26 @@ export default class Latest extends React.Component<Props, State> {
 		};
 	}
 
-	TagList: string[] = ["challenge", "solution", "personal", "work", "study"];
+	TagList: string[] = [
+		"challenge",
+		"solution",
+		"personal",
+		"work",
+		"study",
+		"view all",
+	];
 
 	componentDidMount() {
 		this.latestPosts();
 	}
 
-	reformatDate(rawDate: string) {
+	reformatDate = (rawDate: string) => {
 		let month = rawDate.slice(5, 7);
 		let day = rawDate.slice(8, 10);
 		let year = rawDate.slice(0, 4);
 		let formatDate = `${month}/${day}/${year}`;
 		return formatDate;
-	}
+	};
 
 	latestPosts = async () => {
 		let response = await fetch(`${APIURL}/post/all`, {
@@ -98,13 +105,17 @@ export default class Latest extends React.Component<Props, State> {
 		});
 		let json = await response.json();
 		let posts = json.posts;
-		let tagged: Post[] = [];
-		posts.map((tag: Post) => {
-			if (tag.tags.includes(`${this.state.filter}`) === true) {
-				tagged.push(tag);
-			}
-		});
-		this.setState({ recent: tagged });
+		if (this.state.filter === "view all") {
+			this.setState({ recent: posts });
+		} else {
+			let tagged: Post[] = [];
+			posts.map((tag: Post) => {
+				if (tag.tags.includes(`${this.state.filter}`) === true) {
+					tagged.push(tag);
+				}
+			});
+			this.setState({ recent: tagged });
+		}
 	};
 
 	sortRecent(arr: Post[]) {
@@ -118,48 +129,7 @@ export default class Latest extends React.Component<Props, State> {
 	};
 	handleFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 		this.setState({ filter: event.target.value as string });
-		console.log(event.target.value as string);
 	};
-	/* 
-	renderPosts() {
-		if (this.state.recent.length !== (undefined || 0)) {
-			this.state.recent.map((post) => {
-				return (
-					<Card key={post.id} className="latest-card">
-						<CardContent>
-							<Typography variant="h5" component="h2">
-								{post.title}
-								{"   "}
-								{post.edited ? "(edited)" : ""}
-							</Typography>
-							<Typography color="textSecondary">
-								{post.author}, {this.reformatDate(post.createdAt)}
-							</Typography>
-							<Typography variant="body2" component="p">
-								{post.body}
-							</Typography>
-							<Typography variant="body2" component="p">
-								{post.tags.map((tag) => {
-									return (
-										<span key={tag}>
-											<Chip label={tag} />
-										</span>
-									);
-								})}
-							</Typography>
-						</CardContent>
-						<CardActions>
-							<Button onClick={() => this.setExpand(true, post.id)}>
-								view full post
-							</Button>
-						</CardActions>
-					</Card>
-				);
-			});
-		} else {
-			return <h1>no results!</h1>;
-		}
-	} */
 
 	render() {
 		return (
@@ -189,27 +159,34 @@ export default class Latest extends React.Component<Props, State> {
 				) : (
 					<span></span>
 				)}
-				<h3>
-					<u>Latest Posts </u>
-				</h3>
-				<span>
-					<Button onClick={() => this.latestPosts()}>refresh</Button>
+				<span className="latest-filter-span">
+					<Button
+						className="latest-filter-refreshbutton"
+						onClick={() => this.latestPosts()}
+					>
+						refresh
+					</Button>
+					{/* <h3 className="latest-filter-heading">Latest Posts</h3> */}
+					<span style={style.filterSelect}>
+						<FormControl>
+							<InputLabel id="filter-posts">filter</InputLabel>
+							<Select
+								labelId="filter-posts"
+								id="select-filter-posts"
+								value={this.state.filter}
+								onChange={this.handleFilterChange}
+								autoWidth={true}
+							>
+								{this.TagList.map((tag) => {
+									return <MenuItem value={`${tag}`}>{tag}</MenuItem>;
+								})}
+							</Select>
+						</FormControl>
+					</span>
 
-					<FormControl>
-						<InputLabel id="filter-posts">filter</InputLabel>
-						<Select
-							labelId="filter-posts"
-							id="select-filter-posts"
-							value={this.state.filter}
-							onChange={this.handleFilterChange}
-							labelWidth={20}
-						>
-							{this.TagList.map((tag) => {
-								return <MenuItem value={`${tag}`}>{tag}</MenuItem>;
-							})}
-						</Select>
-					</FormControl>
-					<Button onClick={() => this.filterPosts()}>search</Button>
+					<Button style={style.filterButton} onClick={() => this.filterPosts()}>
+						search
+					</Button>
 				</span>
 
 				<div>
@@ -233,3 +210,4 @@ export default class Latest extends React.Component<Props, State> {
 		);
 	}
 }
+export default Radium(Latest);

@@ -1,15 +1,30 @@
 import {
-	FormGroup,
-	TextField,
 	Button,
 	DialogContent,
-	DialogTitle,
 	DialogContentText,
+	DialogTitle,
+	FormGroup,
+	TextField,
 } from "@material-ui/core";
-import { Formik, Form } from "formik";
+import { Form, Formik } from "formik";
+import Radium from "radium";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
 import "./EditPost.css";
+
+const style = {
+	username: { fontFamily: "'Oleo Script Swash Caps', cursive" },
+	form: {
+		margin: "1em",
+		width: "30em",
+	},
+	submit: {
+		marginLeft: "80%",
+	},
+	main: {
+		width: "100%",
+	},
+};
 
 interface SelectedPost {
 	author: string;
@@ -30,37 +45,9 @@ interface Props {
 	refresh: () => void;
 	setEdit: (status: boolean) => void;
 	postFetch: () => void;
-	/* {
-		author: string;
-		body: string;
-		createdAt: string;
-		edited: false;
-		id: number;
-		private: false;
-		tags: string[];
-		title: string;
-		updatedAt: string;
-		userId: number;
-	}; */
 }
 
-export default class EditPost extends Component<Props> {
-	constructor(props: Props) {
-		super(props);
-		/* post = {
-			author: "",
-			body: "",
-			createdAt: "",
-			edited: false,
-			id: 0,
-			private: false,
-			tags: [],
-			title: "",
-			updatedAt: "",
-			userId: 0,
-		}; */
-	}
-
+class EditPost extends Component<Props> {
 	postEditFetch = (postValues: { title: string; body: string }) => {
 		let title;
 		let body;
@@ -97,9 +84,10 @@ export default class EditPost extends Component<Props> {
 
 	render() {
 		return (
-			<div className="editpost-dialog">
+			<div className="editpost-dialog" style={style.main}>
 				<DialogTitle>
-					edit: {this.props.post.title} - from user {this.props.post.author}{" "}
+					edit: {this.props.post.title} - -
+					<span style={style.username}>{this.props.post.author}</span>{" "}
 				</DialogTitle>
 				<DialogContent>
 					<DialogContentText id="alert-dialog-slide-description">
@@ -113,9 +101,10 @@ export default class EditPost extends Component<Props> {
 							}}
 						>
 							{({ values, handleChange, handleBlur }) => (
-								<Form>
+								<Form style={style.form}>
 									<div>
 										<TextField
+											style={style.form}
 											name="title"
 											placeholder={this.props.post.title}
 											value={values.title}
@@ -125,6 +114,7 @@ export default class EditPost extends Component<Props> {
 									</div>
 									<div>
 										<TextField
+											style={style.form}
 											name="body"
 											placeholder={this.props.post.body}
 											value={values.body}
@@ -132,7 +122,9 @@ export default class EditPost extends Component<Props> {
 											onBlur={handleBlur}
 										/>
 									</div>
-									<Button type="submit">post edit</Button>
+									<Button style={style.submit} type="submit">
+										post edit
+									</Button>
 									<br />
 									<br />
 								</Form>
@@ -144,3 +136,4 @@ export default class EditPost extends Component<Props> {
 		);
 	}
 }
+export default Radium(EditPost);

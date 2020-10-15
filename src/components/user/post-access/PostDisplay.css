@@ -1,0 +1,21 @@
+.postTags {
+	margin: 3px;
+}
+.edited-indicator {
+	font-family: "Staatliches", cursive;
+}
+.postdisplay-title {
+	font-family: "Staatliches", cursive;
+	font-size: 2em;
+	margin-bottom: -10px;
+	text-align: right;
+}
+.postdisplay-authorfont {
+	font-family: "Open Sans", sans-serif;
+}
+.latest-taglist {
+	margin-right: 1em;
+}
+.postdisplay-cardactions {
+	flex-direction: row-reverse;
+}
