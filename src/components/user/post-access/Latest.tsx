@@ -1,23 +1,26 @@
 import {
 	Button,
 	Card,
-	CardActions,
 	CardContent,
-	Typography,
 	FormControl,
 	InputLabel,
-	Select,
 	MenuItem,
+	Select,
+	Typography,
 } from "@material-ui/core";
-import Chip from "@material-ui/core/Chip/Chip";
+import Radium from "radium";
 import * as React from "react";
 import APIURL from "../../../helpers/environment";
+import { Post } from "../../InterfaceExports";
 import CreatePost from "./CreatePost";
 import ExpandPost from "./ExpandPost";
 import "./Latest.css";
-import { Post } from "../../InterfaceExports";
 import PostDisplay from "./PostDisplay";
-import { addSyntheticLeadingComment } from "typescript";
+
+const style = {
+	filterSelect: { paddingTop: "1em", width: "4em", marginLeft: "80%" },
+	filterButton: { paddingTop: "3em" },
+};
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -34,7 +37,7 @@ interface State {
 	filter: string;
 }
 
-export default class Latest extends React.Component<Props, State> {
+class Latest extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
@@ -163,9 +166,9 @@ export default class Latest extends React.Component<Props, State> {
 					>
 						refresh
 					</Button>
-					<h3 className="latest-filter-heading">Latest Posts</h3>
-					<span>
-						<FormControl className="latest-filter-select">
+					{/* <h3 className="latest-filter-heading">Latest Posts</h3> */}
+					<span style={style.filterSelect}>
+						<FormControl>
 							<InputLabel id="filter-posts">filter</InputLabel>
 							<Select
 								labelId="filter-posts"
@@ -179,14 +182,11 @@ export default class Latest extends React.Component<Props, State> {
 								})}
 							</Select>
 						</FormControl>
-
-						<Button
-							className="latest-filter-selectbutton"
-							onClick={() => this.filterPosts()}
-						>
-							search
-						</Button>
 					</span>
+
+					<Button style={style.filterButton} onClick={() => this.filterPosts()}>
+						search
+					</Button>
 				</span>
 
 				<div>
@@ -210,3 +210,4 @@ export default class Latest extends React.Component<Props, State> {
 		);
 	}
 }
+export default Radium(Latest);

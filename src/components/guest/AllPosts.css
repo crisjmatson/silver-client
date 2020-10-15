@@ -5,8 +5,6 @@
 }
 .guestpost-heading {
 	color: white;
-	padding: 2em;
-	margin-bottom: -3em;
 	text-align: left;
 	font-family: "Staatliches", cursive;
 }
@@ -14,11 +12,9 @@
 	background-image: url("https://images.unsplash.com/photo-1545431619-92b140e1d334?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80");
 	background-color: rgba(0, 0, 0, 0.105);
 	background-blend-mode: screen;
-	margin: 3em;
 }
 .allpost-title {
 	font-family: "Open Sans", sans-serif;
-	font-size: larger;
 }
 .allpost-tag-span {
 	display: flexbox;
@@ -31,4 +27,8 @@
 }
 .allpost-font-bold {
 	font-family: "Staatliches", cursive;
+}
+.allpost-emptyComment {
+	font-family: "Staatliches", cursive;
+	text-align: right;
 }

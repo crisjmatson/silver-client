@@ -1,19 +1,18 @@
 import {
-	Card,
-	CardContent,
-	Typography,
-	Chip,
-	CardActions,
 	Button,
-	Divider,
+	Card,
+	CardActions,
+	CardContent,
+	Chip,
 	ListItem,
 	ListItemAvatar,
 	ListItemText,
+	Typography,
 } from "@material-ui/core";
+import PersonIcon from "@material-ui/icons/Person";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
-import { Post, Comment } from "../../InterfaceExports";
-import PersonIcon from "@material-ui/icons/Person";
+import { Comment, Post } from "../../InterfaceExports";
 
 interface Props {
 	coin: string | undefined;
@@ -124,15 +123,7 @@ export default class ViewPosts extends Component<Props, State> {
 									<Typography variant="body2" component="p">
 										{post.body}
 									</Typography>
-									<Typography variant="body2" component="p">
-										{post.tags.map((tag) => {
-											return (
-												<span key={tag}>
-													<Chip label={tag} />
-												</span>
-											);
-										})}
-									</Typography>
+
 									{/* COMMENT DISPLAY */}
 									<Typography>
 										{this.state.currentPost === post.id &&
@@ -166,7 +157,12 @@ export default class ViewPosts extends Component<Props, State> {
 												this.state.currentPost === post.id &&
 												this.state.comments.length === 0) ||
 										  undefined ? (
-											<span>no comments</span>
+											<span>
+												<hr />
+												<ListItem>
+													<Typography>no comments</Typography>
+												</ListItem>
+											</span>
 										) : (
 											<span></span>
 										)}
@@ -182,7 +178,14 @@ export default class ViewPosts extends Component<Props, State> {
 										<Button onClick={() => this.fetchComments(post.id)}>
 											view comments
 										</Button>
-									)}
+									)}{" "}
+									{post.tags.map((tag) => {
+										return (
+											<span key={tag}>
+												<Chip label={tag} />
+											</span>
+										);
+									})}
 								</CardActions>
 							</Card>
 						);

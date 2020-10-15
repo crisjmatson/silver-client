@@ -22,9 +22,6 @@ interface Props {
 }
 
 export default class PostDisplay extends Component<Props> {
-	constructor(props: Props) {
-		super(props);
-	}
 	reformatDate(rawDate: string) {
 		let month = rawDate.slice(5, 7);
 		let day = rawDate.slice(8, 10);

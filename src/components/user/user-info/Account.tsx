@@ -4,14 +4,30 @@ import {
 	CardActionArea,
 	CardActions,
 	CardContent,
+	List,
+	ListItem,
+	ListItemText,
 	Typography,
 } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar/Avatar";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar/ListItemAvatar";
+import EventIcon from "@material-ui/icons/Event";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import SchoolIcon from "@material-ui/icons/School";
 import "date-fns";
+import Radium from "radium";
 import React, { Component } from "react";
 import { Profile, User } from "../../InterfaceExports";
 import DeleteAcct from "./DeleteAcct";
 import EditAcct from "./EditAcct";
 
+/* STYLING */
+
+const style = {
+	heading: {
+		fontFamily: "'Staatliches', cursive",
+	},
+};
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName: (name: string) => void;
@@ -21,15 +37,13 @@ interface Props {
 	account: User;
 	profile: Profile;
 }
-
 interface State {
 	profileReady: boolean;
 	edit: boolean;
 	delete: boolean;
 	date: Date | null;
 }
-
-export default class Account extends Component<Props, State> {
+class Account extends Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
@@ -59,7 +73,6 @@ export default class Account extends Component<Props, State> {
 	toggleDelete = (value: boolean) => {
 		this.setState({ delete: !value });
 	};
-
 	render() {
 		return (
 			<div>
@@ -88,33 +101,86 @@ export default class Account extends Component<Props, State> {
 				) : (
 					/* ----------------- !!  DEFAULT ACCOUNT VIEW  !! ----------------- */
 					<div>
-						<h1>Account Display</h1>
-
+						<h1 style={style.heading}>
+							Account Display : {this.props.currentuser}
+						</h1>
 						<Card>
 							<CardActionArea>
 								<CardContent>
-									<Typography gutterBottom variant="h5" component="h2">
-										Name: {this.props.currentuser}
-									</Typography>
 									<Typography
 										variant="body2"
 										color="textSecondary"
 										component="p"
 									>
-										<ul>
-											<li>email -{this.props.account.email}</li>
-											<li>
-												joined -{" "}
-												{this.reformatDate(this.props.account.createdAt)}
-											</li>
-											<li>
-												status -
-												{this.props.profile.grad_status == ""
-													? "not available"
-													: this.props.profile.grad_status}
-											</li>
-											<li>graduated - {this.props.profile.date_graduated}</li>
-										</ul>
+										<List>
+											<ListItem>
+												<ListItemAvatar>
+													<Avatar>
+														<MailOutlineIcon />
+													</Avatar>
+												</ListItemAvatar>
+												<ListItemText
+													primary={this.props.account.email}
+													secondary="email address"
+												/>
+											</ListItem>
+											<ListItem>
+												<ListItemAvatar>
+													<Avatar>
+														<EventIcon />
+													</Avatar>
+												</ListItemAvatar>
+												<ListItemText
+													primary={this.reformatDate(
+														this.props.account.createdAt
+													)}
+													secondary="date joined"
+												/>
+											</ListItem>
+											<ListItem>
+												<ListItemAvatar>
+													<Avatar>
+														<EventIcon />
+													</Avatar>
+												</ListItemAvatar>
+												<ListItemText
+													primary={this.reformatDate(
+														this.props.account.createdAt
+													)}
+													secondary="date joined"
+												/>
+											</ListItem>
+											<ListItem>
+												<ListItemAvatar>
+													<Avatar>
+														<SchoolIcon />
+													</Avatar>
+												</ListItemAvatar>
+												<ListItemText
+													primary={
+														this.props.profile.grad_status !== null
+															? this.props.profile.grad_status
+															: "not available"
+													}
+													secondary="status"
+												/>
+											</ListItem>
+											<ListItem>
+												<ListItemAvatar>
+													<Avatar>
+														<SchoolIcon />
+													</Avatar>
+												</ListItemAvatar>
+												<ListItemText
+													primary={
+														this.props.profile.date_graduated !== null
+															? this.props.profile.date_graduated
+															: "not available"
+													}
+													secondary="status"
+												/>
+											</ListItem>
+										</List>
 									</Typography>
 								</CardContent>
 							</CardActionArea>
@@ -141,3 +207,4 @@ export default class Account extends Component<Props, State> {
 		);
 	}
 }
+export default Radium(Account);

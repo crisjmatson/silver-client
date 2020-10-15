@@ -7,7 +7,6 @@ import {
 	CardContent,
 	FormControl,
 	FormGroup,
-	InputLabel,
 	MenuItem,
 	Select,
 	TextField,
@@ -23,6 +22,17 @@ import { Form, Formik } from "formik";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
 import { Profile, User } from "../../InterfaceExports";
+
+/* STYLING */
+
+const style = {
+	heading: {
+		fontFamily: "'Staatliches', cursive",
+	},
+	input: {
+		width: "50vw",
+	},
+};
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -144,13 +154,10 @@ export default class EditAcct extends Component<Props, State> {
 	render() {
 		return (
 			<div>
-				<h1>EDIT</h1>
+				<h1 style={style.heading}>Update Account: </h1>
 				<Card>
 					<CardActionArea>
 						<CardContent>
-							<Typography gutterBottom variant="h5" component="h2">
-								{this.props.currentuser}
-							</Typography>
 							<Typography variant="body2" color="textSecondary" component="p">
 								<FormGroup>
 									<Formik
@@ -165,9 +172,10 @@ export default class EditAcct extends Component<Props, State> {
 										}}
 									>
 										{({ values, handleChange, handleBlur }) => (
-											<Form>
+											<Form className="editform" style={style.input}>
 												<FormControl>
 													<TextField
+														style={style.input}
 														name="email"
 														placeholder={this.props.account.email}
 														value={values.email}
@@ -176,8 +184,8 @@ export default class EditAcct extends Component<Props, State> {
 													/>
 												</FormControl>
 												<br />
-												<FormControl variant="outlined">
-													<InputLabel id="status-label">Status</InputLabel>
+												<br />
+												<FormControl variant="outlined" style={style.input}>
 													<Select
 														name="grad_status"
 														labelId="status-label"
@@ -202,11 +210,9 @@ export default class EditAcct extends Component<Props, State> {
 													</Select>
 												</FormControl>
 												<br />
+												<br />
 												{this.props.profile.grad_status === "alumni" ? (
 													<MuiPickersUtilsProvider utils={DateFnsUtils}>
-														<InputLabel id="date_graduated-label">
-															Date Graduated
-														</InputLabel>
 														<KeyboardDatePicker
 															name="date_graduated"
 															id="date_graduated"

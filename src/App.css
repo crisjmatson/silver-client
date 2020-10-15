@@ -34,9 +34,8 @@ font-family: 'Oleo Script Swash Caps', cursive; -- script font
 	margin: 5em;
 }
 .landing-box-trio {
-	/* background-image: url("https://images.unsplash.com/photo-1586557358044-e53dde045283?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80");
-	background-size: cover; */
-	background-color: rgba(255, 255, 255, 0.3);
+	background-image: url("https://images.unsplash.com/photo-1582730790322-2e2f68c7183c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1867&q=80");
+	background-color: rgba(7, 34, 121, 0.913);
 	background-blend-mode: screen;
 	margin-top: 2em;
 }
@@ -46,11 +45,12 @@ font-family: 'Oleo Script Swash Caps', cursive; -- script font
 .box-trio {
 	background-color: black;
 	color: white;
-	padding: 1em;
+	padding: 3em;
 }
 .landing-box-trio-title {
+	font-family: "Open Sans", sans-serif;
 	text-align: center;
-	font-family: "Staatliches", cursive;
+	margin: 0.25em;
 }
 .entrance-container {
 	padding: 4em;

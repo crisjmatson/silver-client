@@ -17,13 +17,14 @@
     "@testing-library/user-event": "^7.2.1",
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.67",
-    "@types/react": "^16.9.52",
+    "@types/radium": "^0.24.2",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.6",
     "cloudinary-react": "^1.6.7",
     "date-fns": "^2.16.1",
     "formik": "^2.2.0",
     "notistack": "^1.0.1",
+    "radium": "^0.26.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
@@ -55,6 +56,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "^16.9.52",
     "@types/styled-components": "^5.1.4"
   }
 }

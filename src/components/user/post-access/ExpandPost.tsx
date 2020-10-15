@@ -27,6 +27,21 @@ import { Comment, Post } from "../../InterfaceExports";
 import AdminPost from "./admin-post/AdminPost";
 import DeletePost from "./DeletePost";
 import EditPost from "./EditPost";
+import Radium from "radium";
+
+const style = {
+	username: { fontFamily: "'Oleo Script Swash Caps', cursive" },
+	form: {
+		margin: "1em",
+		width: "30em",
+	},
+	submit: {
+		marginLeft: "80%",
+	},
+	main: {
+		width: "100%",
+	},
+};
 
 const Transition = React.forwardRef(function Transition(
 	props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -55,7 +70,7 @@ interface Props {
 	refresh: () => Promise<void>;
 }
 
-export default class ExpandPost extends Component<Props, State> {
+class ExpandPost extends Component<Props, State> {
 	componentDidMount() {
 		this.postFetch();
 	}
@@ -186,7 +201,7 @@ export default class ExpandPost extends Component<Props, State> {
 
 	render() {
 		return (
-			<div>
+			<div style={style.main}>
 				{this.state.post ? (
 					<Dialog
 						TransitionComponent={Transition}
@@ -248,7 +263,8 @@ export default class ExpandPost extends Component<Props, State> {
 						) : (
 							<span>
 								<DialogTitle id="alert-dialog-slide-title">
-									{this.state.post.title} - from user {this.state.post.author}{" "}
+									{this.state.post.title} -
+									<span style={style.username}>{this.state.post.author}</span>{" "}
 									{this.props.adminStatus ? (
 										<Button
 											onClick={() => this.setState({ adminToggle: true })}
@@ -271,17 +287,21 @@ export default class ExpandPost extends Component<Props, State> {
 										}}
 									>
 										{({ values, handleChange, handleBlur }) => (
-											<Form>
-												<label htmlFor="commentPost">comment</label>
+											<Form style={style.form}>
 												<br />
-												<TextField
-													id="commentPost"
-													name="commentPost"
-													placeholder="comment..."
-													onChange={handleChange}
-													onBlur={handleBlur}
-												/>
-												<Button type="submit">Submit</Button>
+												<span>
+													<TextField
+														style={style.form}
+														id="commentPost"
+														name="commentPost"
+														label="comment..."
+														onChange={handleChange}
+														onBlur={handleBlur}
+													/>
+													<Button style={style.submit} type="submit">
+														Submit
+													</Button>
+												</span>
 											</Form>
 										)}
 									</Formik>
@@ -439,3 +459,4 @@ export default class ExpandPost extends Component<Props, State> {
 		);
 	}
 }
+export default Radium(ExpandPost);

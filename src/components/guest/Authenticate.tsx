@@ -1,23 +1,24 @@
-import {
-	Button,
-	Dialog,
-	FormGroup,
-	InputLabel,
-	Slide,
-	TextField,
-} from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import Snackbar from "@material-ui/core/Snackbar";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { Button, Dialog, FormGroup, Slide, TextField } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
-import CloseIcon from "@material-ui/icons/Close";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Form, Formik } from "formik";
+import Radium from "radium";
 import React from "react";
 import APIURL from "../../helpers/environment";
 import AdminAuth from "./AdminAuth";
 import "./Authenticate.css";
-//import type '@material-ui/lab/themeAugmentation';
+
+const style = {
+	formDialog: {
+		width: "400px",
+		padding: "6vw",
+	},
+	formInput: {
+		width: "80%",
+	},
+	denial: {
+		fontFamily: "'Staatliches', cursive",
+	},
+};
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -55,7 +56,7 @@ const Transition = React.forwardRef(function Transition(
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default class Authenticate extends React.Component<Props, State> {
+class Authenticate extends React.Component<Props, State> {
 	state: State = {
 		admin: false,
 		toggle: false,
@@ -148,7 +149,7 @@ export default class Authenticate extends React.Component<Props, State> {
 							setSnackBar={this.props.setSnackBar}
 						/>
 					) : (
-						<div className="authenticate-formik">
+						<div className="authenticate-formik" style={style.formDialog}>
 							<FormGroup>
 								<Formik
 									initialValues={{ email: "", username: "", password: "" }}
@@ -163,10 +164,12 @@ export default class Authenticate extends React.Component<Props, State> {
 											{this.state.toggle ? (
 												<div>
 													<TextField
+														required
 														label="email"
 														className="authenticate-formik-input"
 														fullWidth={true}
 														name="email"
+														type="email"
 														value={values.email}
 														onChange={handleChange}
 														onBlur={handleBlur}
@@ -177,6 +180,7 @@ export default class Authenticate extends React.Component<Props, State> {
 											)}
 											<div>
 												<TextField
+													required
 													label="username"
 													className="authenticate-formik-input"
 													name="username"
@@ -188,9 +192,11 @@ export default class Authenticate extends React.Component<Props, State> {
 											</div>
 											<div>
 												<TextField
+													required
 													label="password"
 													className="authenticate-formik-input"
 													name="password"
+													type="password"
 													value={values.password}
 													onChange={handleChange}
 													onBlur={handleBlur}
@@ -226,3 +232,4 @@ export default class Authenticate extends React.Component<Props, State> {
 		);
 	}
 }
+export default Radium(Authenticate);

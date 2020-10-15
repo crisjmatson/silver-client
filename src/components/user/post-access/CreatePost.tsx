@@ -1,28 +1,21 @@
-import * as React from "react";
-import {
-	Formik,
-	FormikHelpers,
-	FormikProps,
-	Form,
-	Field,
-	FieldProps,
-} from "formik";
-import APIURL from "../../../helpers/environment";
-import "./CreatePost.css";
 import {
 	Box,
 	Button,
-	TextField,
+	Chip,
 	FormControlLabel,
 	Switch,
-	Chip,
+	TextField,
 } from "@material-ui/core";
-import { Tag } from "../../InterfaceExports";
-import DoneIcon from "@material-ui/icons/Done";
-import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
+import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
+import DoneIcon from "@material-ui/icons/Done";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import { Form, Formik } from "formik";
+import * as React from "react";
+import APIURL from "../../../helpers/environment";
+import { Tag } from "../../InterfaceExports";
+import "./CreatePost.css";
 
 function Alert(props: AlertProps) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -232,7 +225,7 @@ export default class CreatePost extends React.Component<Props, State> {
 							<TextField
 								id="title"
 								name="title"
-								placeholder="Title"
+								label="Title"
 								onChange={handleChange}
 								onBlur={handleBlur}
 								value={values.title || ""}
@@ -247,7 +240,7 @@ export default class CreatePost extends React.Component<Props, State> {
 								variant="outlined"
 								id="body"
 								name="body"
-								placeholder="enter post here..."
+								label="enter post here..."
 								onChange={handleChange}
 								onBlur={handleBlur}
 								value={values.body || ""}
@@ -304,24 +297,28 @@ export default class CreatePost extends React.Component<Props, State> {
 											color={this.state.study ? "primary" : "default"}
 										/>
 									</span>
+									<FormControlLabel
+										control={
+											<Switch
+												className="createpost-switch"
+												id="privacy"
+												name="privacy"
+												color="primary"
+												onChange={this.handleSwitchChange}
+												onBlur={handleBlur}
+												placeholder="false"
+											/>
+										}
+										label="Private?"
+									/>
+									<span className="createpost-submit">
+										<Button type="submit" variant="outlined">
+											Submit
+										</Button>
+									</span>
 								</span>
-								<FormControlLabel
-									control={
-										<Switch
-											className="createpost-switch"
-											id="privacy"
-											name="privacy"
-											color="primary"
-											onChange={this.handleSwitchChange}
-											onBlur={handleBlur}
-											placeholder="false"
-										/>
-									}
-									label="Private?"
-								/>
-							</span>
-							<span className="createpost-submit">
-								<Button type="submit">Submit</Button>
+								<br />
+								<hr />
 							</span>
 						</Form>
 					)}
