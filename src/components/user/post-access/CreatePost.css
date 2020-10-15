@@ -1,0 +1,17 @@
+.post-form-box {
+	padding: 3em;
+}
+.MuiChip-root {
+	padding: 1em;
+}
+.createpost-tags-tag {
+	margin-right: 1em;
+}
+.createpost-switch {
+	margin-left: 0.25em;
+}
+.createpost-submit {
+	margin-top: 1em;
+	margin-left: 66%;
+	width: 100%;
+}

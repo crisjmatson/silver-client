@@ -10,31 +10,6 @@ import React, { Component } from "react";
 import APIURL from "../../../../helpers/environment";
 import { Post, Comment } from "../../../InterfaceExports";
 
-/* interface SelectedPost {
-	author: string;
-	body: string;
-	createdAt: string;
-	edited: boolean;
-	id: number;
-	private: boolean;
-	tags: string[];
-	title: string;
-	updatedAt: string;
-	userId: number;
-}
-
-interface Comment {
-	author: string;
-	body: string;
-	createdAt: string;
-	edited: boolean;
-	id: number;
-	postId: number;
-	private: boolean;
-	updatedAt: string;
-	userId: number;
-} */
-
 interface Props {
 	post: Post;
 	comments: Comment[];

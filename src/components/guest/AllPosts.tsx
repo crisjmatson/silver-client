@@ -19,13 +19,14 @@ import APIURL from "../../helpers/environment";
 import { Comment, Post } from "../InterfaceExports";
 import "./AllPosts.css";
 import PersonIcon from "@material-ui/icons/Person";
+import Chip from "@material-ui/core/Chip/Chip";
+import "./AllPosts.css";
 
 interface State {
 	panel: string;
 	expanded: string;
 	list: Post[];
 	comments: Comment[];
-	test: any;
 	commentToggle: boolean;
 	currentPost: number;
 }
@@ -44,7 +45,6 @@ export default class AllPosts extends React.Component {
 		expanded: "",
 		currentPost: 99999999,
 		commentToggle: false,
-		test: "starter",
 		list: [
 			{
 				author: "",
@@ -80,33 +80,6 @@ export default class AllPosts extends React.Component {
 			.then((json) => json.posts)
 			.then((arr) => this.sortRecent(arr));
 	}
-
-	/* getName(num: number): string {
-		let nameReturn;
-		const gone: string = "d-e-l-e-t-e-d";
-		if (num === null) {
-			return (nameReturn = gone);
-		} else {
-			fetch(`${APIURL}/user/${num}`, {
-				method: "GET",
-				headers: new Headers({
-					"Content-Type": "application/json",
-				}),
-			})
-				.then((response) => response.json())
-				.then((name) => {
-					//console.log(name);
-					if (name.error) {
-						return (nameReturn = gone);
-					} else {
-						return (nameReturn = name);
-					}
-				});
-			//return nameReturn;
-		}
-		//return nameReturn;
-	} */
-
 	sortRecent(arr: Post[]) {
 		arr.sort((a, b) => a.id - b.id);
 		arr.reverse();
@@ -123,7 +96,6 @@ export default class AllPosts extends React.Component {
 			method: "GET",
 		});
 		let json = await response.json();
-		console.log(json.comments);
 		this.setState({ comments: json.comments });
 		this.setState({ commentToggle: true });
 	};
@@ -138,31 +110,29 @@ export default class AllPosts extends React.Component {
 	};
 
 	render() {
-		// should probably move this out to another class component - not sure how to keep ALL elements from displaying ALL comments & toggling together
 		return (
-			<Container>
-				<h2>latest posts: </h2>
+			<Container className="guestpost-main">
+				<h1 className="guestpost-heading">LATEST POSTS: </h1>
 				{this.state.list.map((post: Post) => {
-					/* let postAuthor = this.getName(post.userId);
-					console.log(postAuthor); */
 					return (
-						<Card className="guestCard" key={post.id}>
+						<Card key={post.id} className="guestpost-Card">
 							<CardContent>
 								<List>
-									<Typography variant="h5" component="h2">
-										{post.title}
+									<Typography>
+										<h1 className="allpost-title">{post.title}</h1>{" "}
 									</Typography>
 									<Typography color="textSecondary">
 										{post.author}
 										{" - "}
 										{this.reformatDate(post.createdAt)}
 									</Typography>
+									<br />
 									<Typography variant="body2" component="p">
 										{post.body}
 									</Typography>
 									<br />
-									<Divider variant="inset" component="li" />
 									<br />
+									<Divider variant="inset" component="li" />
 									{this.state.commentToggle &&
 									this.state.currentPost === post.id &&
 									this.state.comments.length > 0 ? (
@@ -178,11 +148,7 @@ export default class AllPosts extends React.Component {
 															primary={comment.body}
 															secondary={
 																<React.Fragment>
-																	<Typography
-																		component="span"
-																		variant="body2"
-																		color="textPrimary"
-																	>
+																	<Typography component="span">
 																		{comment.author}
 																	</Typography>
 																	{" -- "}
@@ -190,13 +156,6 @@ export default class AllPosts extends React.Component {
 																</React.Fragment>
 															}
 														/>
-														{/* <AccordionDetails key={comment.id}>
-															<Typography>
-																{comment.body},{" "}
-																{this.reformatDate(comment.createdAt)},{" "}
-																{comment.author}
-															</Typography>
-														</AccordionDetails> */}
 													</ListItem>
 													<Divider variant="inset" component="li" />
 												</span>
@@ -205,7 +164,10 @@ export default class AllPosts extends React.Component {
 									) : this.state.commentToggle &&
 									  this.state.currentPost === post.id &&
 									  this.state.comments.length === 0 ? (
-										<span>no comments</span>
+										<span>
+											<br />
+											no comments
+										</span>
 									) : (
 										<span></span>
 									)}
@@ -239,6 +201,15 @@ export default class AllPosts extends React.Component {
 										>
 											<Typography>show comments</Typography>
 										</Button>
+										<span className="allpost-tag-span">
+											{post.tags.map((tag) => {
+												return (
+													<span key={tag} className="allpost-tag">
+														<Chip label={tag}></Chip>
+													</span>
+												);
+											})}
+										</span>
 									</AccordionSummary>
 								)}
 							</CardActions>

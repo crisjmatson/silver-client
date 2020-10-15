@@ -9,7 +9,7 @@ import {
 import { Formik, Form } from "formik";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
-import './EditPost.css'
+import "./EditPost.css";
 
 interface SelectedPost {
 	author: string;
@@ -29,6 +29,7 @@ interface Props {
 	coin: string | undefined;
 	refresh: () => void;
 	setEdit: (status: boolean) => void;
+	postFetch: () => void;
 	/* {
 		author: string;
 		body: string;
@@ -90,7 +91,7 @@ export default class EditPost extends Component<Props> {
 			.then((json) => console.log(json))
 			.then(() => {
 				this.props.setEdit(false);
-				this.props.refresh();
+				this.props.postFetch();
 			});
 	};
 

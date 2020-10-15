@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
 	AppBar,
 	Button,
@@ -9,16 +8,20 @@ import {
 	Toolbar,
 	Typography,
 } from "@material-ui/core";
-import { Route, Link, Switch, Redirect } from "react-router-dom";
-import Account from "./user-info/Account";
-import Post from "./post-access/Post";
-import APIURL from "../../helpers/environment";
-import { User, Profile } from "../InterfaceExports";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import GrainIcon from "@material-ui/icons/Grain";
+import HomeIcon from "@material-ui/icons/Home";
+import WhatshotIcon from "@material-ui/icons/Whatshot";
+import * as React from "react";
+import { Link, Redirect, Route, Switch } from "react-router-dom";
+import PostView from "./post-access/PostView";
+import ViewProfile from "./user-info/ViewProfile";
+import Home from "./home/Home";
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName: (name: string) => void;
-	currentuser: string | undefined;
+	currentuser: string;
 	coin: string | undefined;
 	adminStatus: boolean;
 }
@@ -28,8 +31,8 @@ interface State {
 	edit: boolean;
 	delete: boolean;
 	grad_status: unknown;
-	user: User;
-	profile: Profile;
+	/* 	user: User;
+	profile: Profile; */
 }
 export default class Navigation extends React.Component<Props, State> {
 	constructor(props: Props) {
@@ -40,48 +43,8 @@ export default class Navigation extends React.Component<Props, State> {
 			profileReady: true,
 			edit: false,
 			delete: false,
-			user: {
-				createdAt: "string",
-				email: "string",
-				id: 999999999999,
-				password: "string",
-				role: "string",
-				updatedAt: "string",
-				username: "string",
-			},
-			profile: {
-				avatar: "",
-				challenges_completed: 0,
-				createdAt: "",
-				date_graduated: "",
-				grad_status: "",
-				id: 999999999999,
-				updatedAt: "",
-				userId: 999999999999,
-			},
 		};
 	}
-
-	componentDidMount() {
-		this.accountFetch();
-	}
-
-	accountFetch = () => {
-		fetch(`${APIURL}/user/view/${this.props.currentuser}`, {
-			method: "GET",
-			headers: new Headers({
-				"Content-Type": "application/json",
-				Authorization: `${this.props.coin}`,
-			}),
-		})
-			.then((response) => response.json())
-			.then((json) => {
-				//console.log(json);
-				this.setState({ user: json.user });
-				//this.setViewCard();
-			});
-		//.then(() => this.profileFetch());
-	};
 
 	handleClick = (event: React.MouseEvent<HTMLElement>) => {
 		this.setState({ anchorEl: true });
@@ -117,14 +80,11 @@ export default class Navigation extends React.Component<Props, State> {
 								TransitionComponent={Fade}
 							>
 								<MenuItem onClick={() => this.handleClose()}>
-									<Link to="/post">Posts</Link>
+									<Link to="/postview">Posts</Link>
 								</MenuItem>
 								<MenuItem onClick={() => this.handleClose()}>
-									<Link to="/account">Account</Link>
+									<Link to="/viewprofile">Account</Link>
 								</MenuItem>
-								{/* <MenuItem onClick={() => this.handleClose()}>
-									<Link to="/profile">Profile</Link>
-								</MenuItem> */}
 							</Menu>
 							<Typography variant="h6">
 								{this.props.adminStatus ? "ADMIN" : "Wesch"}
@@ -133,17 +93,37 @@ export default class Navigation extends React.Component<Props, State> {
 								color="inherit"
 								onClick={() => {
 									this.props.setCoin(undefined);
-									this.refreshPage(); //  reload(true);
+									this.refreshPage();
 								}}
 							>
 								Logout
 							</Button>
 						</Toolbar>
+						<Breadcrumbs aria-label="breadcrumb">
+							<Link to="/" color="inherit" href="/" /* onClick={handleClick} */>
+								<HomeIcon />
+								Material-UI
+							</Link>
+							<Link
+								to="/"
+								color="inherit"
+								href="/getting-started/installation/"
+								/* onClick={handleClick} */
+							>
+								<WhatshotIcon />
+								Core
+							</Link>
+							<Typography color="textPrimary">
+								<GrainIcon />
+								Breadcrumb
+							</Typography>
+						</Breadcrumbs>
 					</AppBar>
 					<Switch>
-						<Route exact path="/post">
+						
+						<Route exact path="/postview">
 							<span>
-								<Post
+								<PostView
 									currentuser={this.props.currentuser}
 									setCoinName={this.props.setCoinName}
 									coin={this.props.coin}
@@ -152,14 +132,12 @@ export default class Navigation extends React.Component<Props, State> {
 								/>
 							</span>
 						</Route>
-						<Route exact path="/account">
-							<Account
+						<Route exact path="/viewprofile">
+							<ViewProfile
 								currentuser={this.props.currentuser}
 								setCoinName={this.props.setCoinName}
 								coin={this.props.coin}
 								setCoin={this.props.setCoin}
-								userAccount={this.state.user}
-								userProfile={this.state.profile}
 							/>
 						</Route>
 					</Switch>

@@ -1,26 +1,65 @@
-.ultimateContainer {
-	background-color: #282c34;
-	color: whitesmoke;
-}
+/* font families: 
+
+font-family: 'Montserrat', sans-serif; -- looks like island of blue dolphins
+
+font-family: 'Open Sans', sans-serif; - classic simple sans
+
+font-family: 'Staatliches', cursive; -- bold font
+
+font-family: 'Oleo Script Swash Caps', cursive; -- script font
+
+*/
 .App {
+	margin: -5px;
+	width: 100%;
+}
+.authenticate-outer-container {
+	background-color: black;
+}
+.landing-auth-div {
+	background-image: url("https://images.unsplash.com/photo-1531498860502-7c67cf02f657?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80");
+	background-size: 100%;
+	background-color: blue;
 	text-align: center;
-}
-.app-dual {
-	padding-bottom: 10em;
-}
-
-.authenticate-maindiv {
-	color: whitesmoke;
-	padding: 5em;
-}
-
-.App-header {
-	background-color: #282c34;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
 	justify-content: center;
-	font-size: calc(10px + 2vmin);
+	width: 100%;
+	padding-bottom: 5em;
+	padding-top: 5em;
+}
+.landing-logo-img {
+	padding-top: 5em;
+	width: 80%;
+}
+.landing-logo-button {
+	margin: 5em;
+}
+.landing-box-trio {
+	/* background-image: url("https://images.unsplash.com/photo-1586557358044-e53dde045283?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80");
+	background-size: cover; */
+	background-color: rgba(255, 255, 255, 0.3);
+	background-blend-mode: screen;
+	margin-top: 2em;
+}
+.landing-box-trio-grid {
+	padding: 7em;
+}
+.box-trio {
+	background-color: black;
 	color: white;
+	padding: 1em;
+}
+.landing-box-trio-title {
+	text-align: center;
+	font-family: "Staatliches", cursive;
+}
+.entrance-container {
+	padding: 4em;
+}
+.landing-auth-card {
+	background-image: url("https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1651&q=80");
+	background-blend-mode: screen;
+	background-size: cover;
+	background-color: rgb(255, 255, 255, 0.01);
+	margin: 1em;
+	padding: 10em;
 }

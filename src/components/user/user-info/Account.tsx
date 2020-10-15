@@ -1,82 +1,46 @@
-import classes from "*.module.css";
 import {
+	Button,
 	Card,
 	CardActionArea,
-	CardMedia,
+	CardActions,
 	CardContent,
 	Typography,
-	CardActions,
-	Button,
-	FormGroup,
-	TextField,
-	FormControl,
-	FormHelperText,
-	MenuItem,
-	Select,
-	InputLabel,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogContentText,
-	DialogTitle,
-	Slide,
 } from "@material-ui/core";
-import { TransitionProps } from "@material-ui/core/transitions/transition";
-import { Formik, Form } from "formik";
+import "date-fns";
 import React, { Component } from "react";
-import APIURL from "../../../helpers/environment";
+import { Profile, User } from "../../InterfaceExports";
 import DeleteAcct from "./DeleteAcct";
-import { User, Profile } from "../../InterfaceExports";
+import EditAcct from "./EditAcct";
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
 	setCoinName: (name: string) => void;
-	currentuser: string | undefined;
+	refresh: () => void;
+	currentuser: string;
 	coin: string | undefined;
-	userAccount: User;
-	userProfile: Profile;
+	account: User;
+	profile: Profile;
 }
 
 interface State {
 	profileReady: boolean;
 	edit: boolean;
 	delete: boolean;
-	grad_status: unknown;
-	/* user: User;
-	profile: Profile; */
+	date: Date | null;
 }
 
 export default class Account extends Component<Props, State> {
-	/* componentDidMount() {
-		this.accountFetch();
-	} */
 	constructor(props: Props) {
 		super(props);
 		this.state = {
-			/* 	user: {
-				createdAt: "string",
-				email: "string",
-				id: 999999999999,
-				password: "string",
-				role: "string",
-				updatedAt: "string",
-				username: "string",
-			},
-			profile: {
-				avatar: "",
-				challenges_completed: 0,
-				createdAt: "",
-				date_graduated: "",
-				grad_status: "",
-				id: 999999999999,
-				updatedAt: "",
-				userId: 999999999999,
-			}, */
-			grad_status: "",
 			profileReady: true,
 			edit: false,
 			delete: false,
+			date: null,
 		};
+	}
+	componentDidUpdate() {
+		//this.props.refresh();
 	}
 	reformatDate(rawDate: string) {
 		let month = rawDate.slice(5, 7);
@@ -85,94 +49,15 @@ export default class Account extends Component<Props, State> {
 		let formatDate = `${month}/${day}/${year}`;
 		return formatDate;
 	}
+	handleDateChange = (date: Date | null) => {
+		this.setState({ date: date });
+	};
 	toggleEdit = () => {
 		let opposite = this.state.edit;
 		this.setState({ edit: !opposite });
 	};
-	toggleDelete = (value: any) => {
+	toggleDelete = (value: boolean) => {
 		this.setState({ delete: !value });
-	};
-	/* 
-	accountFetch = () => {
-		fetch(`${APIURL}/user/view/${this.props.currentuser}`, {
-			method: "GET",
-			headers: new Headers({
-				"Content-Type": "application/json",
-				Authorization: `${this.props.coin}`,
-			}),
-		})
-			.then((response) => response.json())
-			.then((json) => {
-				//console.log(json);
-				this.setState({ user: json.user });
-				//this.setViewCard();
-			});
-		//.then(() => this.profileFetch());
-	};
-
-	setViewCard = () => {
-		this.setState({ profileReady: true });
-	};
-
-	profileFetch() {
-		fetch(`${APIURL}/profile/view`, {
-			method: "GET",
-			headers: new Headers({
-				"Content-Type": "application/json",
-				Authorization: `${this.props.coin}`,
-			}),
-		})
-			.then((response) => response.json())
-			.then((json) =>
-				json.error
-					? this.profileCreate()
-					: this.setState({ profile: json.user })
-			);
-	}
-
-	profileCreate() {
-		console.log("profile create start");
-		let blank = {
-			profile: {
-				avatar: "",
-				grad_status: "",
-				date_graduated: "",
-			},
-		};
-		fetch(`${APIURL}/profile`, {
-			method: "POST",
-			headers: new Headers({
-				"Content-Type": "application/json",
-				Authorization: `${this.props.coin}`,
-			}),
-			body: JSON.stringify(blank),
-		})
-			.then((response) => response.json())
-			.then((json) => this.setState({ profile: json.user }));
-	} */
-
-	dualUpdate = (updates: {
-		age: number;
-		email: string;
-		avatar: string;
-		date_graduated: string;
-		grad_status: string;
-	}) => {
-		console.log("profile/account update", updates);
-		fetch(`${APIURL}/user/update`, {
-			method: "PUT",
-			headers: new Headers({
-				"Content-Type": "application/json",
-				Authorization: `${this.props.coin}`,
-			}),
-			body: JSON.stringify({
-				user: {
-					mail: updates.email,
-				},
-			}),
-		})
-			.then((response) => response.json())
-			.then((json) => console.log(json));
 	};
 
 	render() {
@@ -189,102 +74,17 @@ export default class Account extends Component<Props, State> {
 					<span></span>
 				)}
 				{this.state.edit ? (
-					<div>
-						<h1>EDIT</h1>
-						<Card>
-							<CardActionArea>
-								<CardContent>
-									<Typography gutterBottom variant="h5" component="h2">
-										{this.props.userAccount.username}
-									</Typography>
-									<Typography
-										variant="body2"
-										color="textSecondary"
-										component="p"
-									>
-										<FormGroup>
-											<Formik
-												initialValues={{
-													age: 0,
-													email: "",
-													avatar: "",
-													date_graduated: "",
-													grad_status: "",
-												}}
-												onSubmit={(values) => {
-													console.log(values);
-													this.dualUpdate(values);
-												}}
-											>
-												{({ values, handleChange, handleBlur }) => (
-													<Form>
-														<div>
-															<TextField
-																name="email"
-																placeholder={this.props.userAccount.email}
-																value={values.email}
-																onChange={handleChange}
-																onBlur={handleBlur}
-															/>
-														</div>
-														{/* <FormControl variant="outlined">
-															<InputLabel id="demo-simple-select-outlined-label">
-																Age
-															</InputLabel>
-															<Select
-																labelId="demo-simple-select-outlined-label"
-																id="demo-simple-select-outlined"
-																value={values.age}
-																onChange={(e) => {
-																	console.log(e.target);
-																	this.setState({
-																		grad_status: e.target.value,
-																	});
-																}}
-																label="Age"
-															>
-																<MenuItem value="">
-																	<em>None</em>
-																</MenuItem>
-																<MenuItem value={10}>Ten</MenuItem>
-																<MenuItem value={20}>Twenty</MenuItem>
-																<MenuItem value={30}>Thirty</MenuItem>
-															</Select>
-														</FormControl> */}
-														<br />
-														<Button type="submit">submit</Button>
-														<Button
-															size="small"
-															color="primary"
-															onClick={() => this.setState({ edit: false })}
-														>
-															cancel
-														</Button>
-													</Form>
-												)}
-											</Formik>
-										</FormGroup>
-									</Typography>
-								</CardContent>
-							</CardActionArea>
-							<CardActions>
-								<Button
-									size="small"
-									color="primary"
-									onClick={() => this.toggleEdit()}
-								>
-									Edit
-								</Button>
-								<Button
-									onClick={() => this.toggleDelete(this.state.delete)}
-									size="small"
-									color="primary"
-								>
-									Delete
-								</Button>
-							</CardActions>
-						</Card>
-					</div>
+					<EditAcct
+						currentuser={this.props.currentuser}
+						setCoinName={this.props.setCoinName}
+						coin={this.props.coin}
+						setCoin={this.props.setCoin}
+						account={this.props.account}
+						profile={this.props.profile}
+						toggleEdit={this.toggleEdit}
+						toggleDelete={this.toggleDelete}
+						refresh={this.props.refresh}
+					/>
 				) : (
 					/* ----------------- !!  DEFAULT ACCOUNT VIEW  !! ----------------- */
 					<div>
@@ -294,7 +94,7 @@ export default class Account extends Component<Props, State> {
 							<CardActionArea>
 								<CardContent>
 									<Typography gutterBottom variant="h5" component="h2">
-										Name: {this.props.userAccount.username}
+										Name: {this.props.currentuser}
 									</Typography>
 									<Typography
 										variant="body2"
@@ -302,30 +102,18 @@ export default class Account extends Component<Props, State> {
 										component="p"
 									>
 										<ul>
-											<li>
-												email -{" "}
-												{this.props.userAccount === undefined
-													? "n/a"
-													: this.props.userAccount.email}
-											</li>
+											<li>email -{this.props.account.email}</li>
 											<li>
 												joined -{" "}
-												{this.props.userAccount === undefined
-													? "n/a"
-													: this.reformatDate(this.props.userAccount.createdAt)}
+												{this.reformatDate(this.props.account.createdAt)}
 											</li>
 											<li>
-												status -{" "}
-												{this.props.userProfile.grad_status !== ""
-													? this.props.userProfile.grad_status
-													: "not available"}
+												status -
+												{this.props.profile.grad_status == ""
+													? "not available"
+													: this.props.profile.grad_status}
 											</li>
-											<li>
-												graduated -{" "}
-												{this.props.userProfile.date_graduated !== ""
-													? this.props.userProfile.date_graduated
-													: "not available"}
-											</li>
+											<li>graduated - {this.props.profile.date_graduated}</li>
 										</ul>
 									</Typography>
 								</CardContent>
