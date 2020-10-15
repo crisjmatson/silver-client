@@ -15,7 +15,7 @@ interface DeleteProps {
 	delete: boolean;
 	coin: string | undefined;
 	setCoin: (newCoin: string | undefined) => void;
-	toggleDelete: (value: any) => void;
+	toggleDelete: (value: boolean) => void;
 }
 
 const Transition = React.forwardRef(function Transition(

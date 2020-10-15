@@ -11,6 +11,14 @@ interface Props {
 	setAdmin: (status: boolean) => void;
 	currentuser: string | undefined;
 	coin: string | undefined;
+	setSnackBar: (
+		value: boolean,
+		message: string,
+		severity: "success" | "info" | "warning" | "error" | undefined
+	) => void;
+	snackbarToggle: boolean;
+	snackbarMessage: string;
+	snackbarSeverity: "success" | "info" | "warning" | "error" | undefined;
 }
 
 interface State {
@@ -70,9 +78,17 @@ export default class AdminAuth extends Component<Props, State> {
 				this.props.setAdmin(true);
 				this.props.setCoin(json.sessionToken);
 				this.props.setCoinName(json.user.username);
-				console.log("sign up: ", this.props.coin, json);
+				this.props.setSnackBar(
+					true,
+					"sign up complete! welcome admin!",
+					"success"
+				);
 			} else {
-				console.log("sign up failed");
+				this.props.setSnackBar(
+					true,
+					"sign up failed. are you sure you're an admin...?",
+					"error"
+				);
 			}
 		} else {
 			this.setState({ denial: true });
@@ -103,9 +119,10 @@ export default class AdminAuth extends Component<Props, State> {
 			this.props.setAdmin(true);
 			this.props.setCoin(json.sessionToken);
 			this.props.setCoinName(json.user.username);
-			console.log("sign in: ", json);
+			this.props.setSnackBar(true, "sign in success!", "success");
 		} else {
 			this.setState({ denial: true });
+			this.props.setSnackBar(true, "sign in failed", "error");
 		}
 	};
 
@@ -125,26 +142,28 @@ export default class AdminAuth extends Component<Props, State> {
 						}}
 					>
 						{({ values, handleChange, handleBlur }) => (
-							<Form>
+							<Form className="authenticate-formik-form">
 								{this.state.denial ? <p>access denied</p> : <p></p>}
 								{this.state.signToggle ? (
 									<div>
 										<TextField
+											label="authorization"
 											className="authenticate-formik-input"
 											name="authorization"
-											placeholder="authorization"
 											value={values.authorization}
 											onChange={handleChange}
 											onBlur={handleBlur}
+											fullWidth={true}
 										/>
 										<br />
 										<TextField
+											label="email"
 											className="authenticate-formik-input"
 											name="email"
-											placeholder="email"
 											value={values.email}
 											onChange={handleChange}
 											onBlur={handleBlur}
+											fullWidth={true}
 										/>
 									</div>
 								) : (
@@ -152,22 +171,24 @@ export default class AdminAuth extends Component<Props, State> {
 								)}
 								<div>
 									<TextField
+										label="username"
 										className="authenticate-formik-input"
 										name="username"
-										placeholder="username"
 										value={values.username}
 										onChange={handleChange}
 										onBlur={handleBlur}
+										fullWidth={true}
 									/>
 								</div>
 								<div>
 									<TextField
+										label="password"
 										className="authenticate-formik-input"
 										name="password"
-										placeholder="password"
 										value={values.password}
 										onChange={handleChange}
 										onBlur={handleBlur}
+										fullWidth={true}
 									/>
 								</div>
 								<Button
@@ -177,7 +198,7 @@ export default class AdminAuth extends Component<Props, State> {
 									{this.state.signToggle ? "--sign up--" : "--sign in--"}
 								</Button>
 								<br />
-								<Button onClick={() => this.props.closeAdmin()}>cancel</Button>
+								<br />
 								<br />
 								<Button
 									onClick={() => {
@@ -187,6 +208,7 @@ export default class AdminAuth extends Component<Props, State> {
 								>
 									{this.state.signToggle ? "back to sign in" : "sign up"}
 								</Button>
+								<Button onClick={() => this.props.closeAdmin()}>cancel</Button>
 								{"		"}
 							</Form>
 						)}

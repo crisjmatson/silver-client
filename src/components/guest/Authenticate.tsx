@@ -1,12 +1,23 @@
-import { Button, Dialog, FormGroup, TextField, Slide } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid/Grid";
-import Paper from "@material-ui/core/Paper/Paper";
+import {
+	Button,
+	Dialog,
+	FormGroup,
+	InputLabel,
+	Slide,
+	TextField,
+} from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import Snackbar from "@material-ui/core/Snackbar";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import { TransitionProps } from "@material-ui/core/transitions/transition";
+import CloseIcon from "@material-ui/icons/Close";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Form, Formik } from "formik";
-import * as React from "react";
+import React from "react";
 import APIURL from "../../helpers/environment";
 import AdminAuth from "./AdminAuth";
 import "./Authenticate.css";
-import { TransitionProps } from "@material-ui/core/transitions/transition";
+//import type '@material-ui/lab/themeAugmentation';
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -14,8 +25,16 @@ interface Props {
 	setAdmin: (status: boolean) => void;
 	toggleAuth: () => void;
 	auth: boolean;
-	currentuser: string | undefined;
+	currentuser: string;
 	coin: string | undefined;
+	setSnackBar: (
+		value: boolean,
+		message: string,
+		severity: "success" | "info" | "warning" | "error" | undefined
+	) => void;
+	snackbarToggle: boolean;
+	snackbarMessage: string;
+	snackbarSeverity: "success" | "info" | "warning" | "error" | undefined;
 }
 interface State {
 	admin: boolean;
@@ -28,7 +47,9 @@ interface authValues {
 }
 
 const Transition = React.forwardRef(function Transition(
-	props: TransitionProps & { children?: React.ReactElement<any, any> },
+	props: TransitionProps & {
+		children?: React.ReactElement<BigInteger, string>;
+	},
 	ref: React.Ref<unknown>
 ) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -52,7 +73,6 @@ export default class Authenticate extends React.Component<Props, State> {
 				pass: password,
 			},
 		};
-		console.log(APIURL, user);
 		let response = await fetch(`${APIURL}/user/enter`, {
 			method: "POST",
 			headers: new Headers({
@@ -64,9 +84,9 @@ export default class Authenticate extends React.Component<Props, State> {
 			let json = await response.json();
 			this.props.setCoin(json.sessionToken);
 			this.props.setCoinName(json.user.username);
-			console.log("sign in: ", json);
+			this.props.setSnackBar(true, "you're logged in!", "success");
 		} else {
-			console.log("log in failed");
+			this.props.setSnackBar(true, "login failed", "error");
 		}
 	};
 
@@ -78,7 +98,6 @@ export default class Authenticate extends React.Component<Props, State> {
 				pass: password,
 			},
 		};
-		console.log(APIURL, user);
 		let response = await fetch(`${APIURL}/user/start`, {
 			method: "POST",
 			headers: new Headers({
@@ -88,11 +107,15 @@ export default class Authenticate extends React.Component<Props, State> {
 		});
 		if (response.ok === true) {
 			let json = await response.json();
+			this.props.setSnackBar(
+				true,
+				"sign up complete! you're logged in.",
+				"success"
+			);
 			this.props.setCoin(json.sessionToken);
 			this.props.setCoinName(json.user.username);
-			console.log("sign up: ", this.props.coin, json);
 		} else {
-			console.log("sign up failed");
+			this.props.setSnackBar(true, "sign up failed", "error");
 		}
 	};
 
@@ -119,6 +142,10 @@ export default class Authenticate extends React.Component<Props, State> {
 							currentuser={this.props.currentuser}
 							setCoinName={this.props.setCoinName}
 							setAdmin={this.props.setAdmin}
+							snackbarToggle={this.props.snackbarToggle}
+							snackbarMessage={this.props.snackbarMessage}
+							snackbarSeverity={this.props.snackbarSeverity}
+							setSnackBar={this.props.setSnackBar}
 						/>
 					) : (
 						<div className="authenticate-formik">
@@ -132,14 +159,14 @@ export default class Authenticate extends React.Component<Props, State> {
 									}}
 								>
 									{({ values, handleChange, handleBlur }) => (
-										<Form>
+										<Form className="authenticate-formik-form">
 											{this.state.toggle ? (
 												<div>
 													<TextField
+														label="email"
 														className="authenticate-formik-input"
 														fullWidth={true}
 														name="email"
-														placeholder="email"
 														value={values.email}
 														onChange={handleChange}
 														onBlur={handleBlur}
@@ -150,22 +177,24 @@ export default class Authenticate extends React.Component<Props, State> {
 											)}
 											<div>
 												<TextField
+													label="username"
 													className="authenticate-formik-input"
 													name="username"
-													placeholder="username"
 													value={values.username}
 													onChange={handleChange}
 													onBlur={handleBlur}
+													fullWidth={true}
 												/>
 											</div>
 											<div>
 												<TextField
+													label="password"
 													className="authenticate-formik-input"
 													name="password"
-													placeholder="password"
 													value={values.password}
 													onChange={handleChange}
 													onBlur={handleBlur}
+													fullWidth={true}
 												/>
 											</div>
 											<Button type="submit">

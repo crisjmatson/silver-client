@@ -15,13 +15,17 @@
 	margin-right: 5em;
 }
 .authenticate-formik {
-	width: 50vw;
-	height: auto;
-	padding: 5em 1em;
+	width: 50%;
+	height: 50vh;
 	display: flex;
 	flex-flow: column wrap;
 	justify-content: space-around;
 	align-items: center;
+	text-align: center;
+}
+.authenticate-formik-form {
+	width: 45vw;
+	padding: 2em;
 }
 .authenticate-formik-input {
 	align-self: center;

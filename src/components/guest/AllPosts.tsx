@@ -19,13 +19,14 @@ import APIURL from "../../helpers/environment";
 import { Comment, Post } from "../InterfaceExports";
 import "./AllPosts.css";
 import PersonIcon from "@material-ui/icons/Person";
+import Chip from "@material-ui/core/Chip/Chip";
+import "./AllPosts.css";
 
 interface State {
 	panel: string;
 	expanded: string;
 	list: Post[];
 	comments: Comment[];
-	test: any;
 	commentToggle: boolean;
 	currentPost: number;
 }
@@ -44,7 +45,6 @@ export default class AllPosts extends React.Component {
 		expanded: "",
 		currentPost: 99999999,
 		commentToggle: false,
-		test: "starter",
 		list: [
 			{
 				author: "",
@@ -80,33 +80,6 @@ export default class AllPosts extends React.Component {
 			.then((json) => json.posts)
 			.then((arr) => this.sortRecent(arr));
 	}
-
-	/* getName(num: number): string {
-		let nameReturn;
-		const gone: string = "d-e-l-e-t-e-d";
-		if (num === null) {
-			return (nameReturn = gone);
-		} else {
-			fetch(`${APIURL}/user/${num}`, {
-				method: "GET",
-				headers: new Headers({
-					"Content-Type": "application/json",
-				}),
-			})
-				.then((response) => response.json())
-				.then((name) => {
-					//console.log(name);
-					if (name.error) {
-						return (nameReturn = gone);
-					} else {
-						return (nameReturn = name);
-					}
-				});
-			//return nameReturn;
-		}
-		//return nameReturn;
-	} */
-
 	sortRecent(arr: Post[]) {
 		arr.sort((a, b) => a.id - b.id);
 		arr.reverse();
@@ -123,7 +96,6 @@ export default class AllPosts extends React.Component {
 			method: "GET",
 		});
 		let json = await response.json();
-		console.log(json.comments);
 		this.setState({ comments: json.comments });
 		this.setState({ commentToggle: true });
 	};
@@ -146,8 +118,8 @@ export default class AllPosts extends React.Component {
 						<Card key={post.id} className="guestpost-Card">
 							<CardContent>
 								<List>
-									<Typography variant="h5" component="h2">
-										{post.title}
+									<Typography>
+										<h1 className="allpost-title">{post.title}</h1>{" "}
 									</Typography>
 									<Typography color="textSecondary">
 										{post.author}
@@ -192,7 +164,10 @@ export default class AllPosts extends React.Component {
 									) : this.state.commentToggle &&
 									  this.state.currentPost === post.id &&
 									  this.state.comments.length === 0 ? (
-										<span>no comments</span>
+										<span>
+											<br />
+											no comments
+										</span>
 									) : (
 										<span></span>
 									)}
@@ -226,6 +201,15 @@ export default class AllPosts extends React.Component {
 										>
 											<Typography>show comments</Typography>
 										</Button>
+										<span className="allpost-tag-span">
+											{post.tags.map((tag) => {
+												return (
+													<span key={tag} className="allpost-tag">
+														<Chip label={tag}></Chip>
+													</span>
+												);
+											})}
+										</span>
 									</AccordionSummary>
 								)}
 							</CardActions>

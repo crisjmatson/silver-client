@@ -33,9 +33,6 @@ interface State {
 	expandPostId: number | undefined;
 	filter: string;
 }
-/* interface Tags {
-	tags: string[];
-} */
 
 export default class Latest extends React.Component<Props, State> {
 	constructor(props: Props) {
@@ -61,19 +58,26 @@ export default class Latest extends React.Component<Props, State> {
 		};
 	}
 
-	TagList: string[] = ["challenge", "solution", "personal", "work", "study"];
+	TagList: string[] = [
+		"challenge",
+		"solution",
+		"personal",
+		"work",
+		"study",
+		"view all",
+	];
 
 	componentDidMount() {
 		this.latestPosts();
 	}
 
-	reformatDate(rawDate: string) {
+	reformatDate = (rawDate: string) => {
 		let month = rawDate.slice(5, 7);
 		let day = rawDate.slice(8, 10);
 		let year = rawDate.slice(0, 4);
 		let formatDate = `${month}/${day}/${year}`;
 		return formatDate;
-	}
+	};
 
 	latestPosts = async () => {
 		let response = await fetch(`${APIURL}/post/all`, {
@@ -98,13 +102,17 @@ export default class Latest extends React.Component<Props, State> {
 		});
 		let json = await response.json();
 		let posts = json.posts;
-		let tagged: Post[] = [];
-		posts.map((tag: Post) => {
-			if (tag.tags.includes(`${this.state.filter}`) === true) {
-				tagged.push(tag);
-			}
-		});
-		this.setState({ recent: tagged });
+		if (this.state.filter === "view all") {
+			this.setState({ recent: posts });
+		} else {
+			let tagged: Post[] = [];
+			posts.map((tag: Post) => {
+				if (tag.tags.includes(`${this.state.filter}`) === true) {
+					tagged.push(tag);
+				}
+			});
+			this.setState({ recent: tagged });
+		}
 	};
 
 	sortRecent(arr: Post[]) {
@@ -118,48 +126,7 @@ export default class Latest extends React.Component<Props, State> {
 	};
 	handleFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 		this.setState({ filter: event.target.value as string });
-		console.log(event.target.value as string);
 	};
-	/* 
-	renderPosts() {
-		if (this.state.recent.length !== (undefined || 0)) {
-			this.state.recent.map((post) => {
-				return (
-					<Card key={post.id} className="latest-card">
-						<CardContent>
-							<Typography variant="h5" component="h2">
-								{post.title}
-								{"   "}
-								{post.edited ? "(edited)" : ""}
-							</Typography>
-							<Typography color="textSecondary">
-								{post.author}, {this.reformatDate(post.createdAt)}
-							</Typography>
-							<Typography variant="body2" component="p">
-								{post.body}
-							</Typography>
-							<Typography variant="body2" component="p">
-								{post.tags.map((tag) => {
-									return (
-										<span key={tag}>
-											<Chip label={tag} />
-										</span>
-									);
-								})}
-							</Typography>
-						</CardContent>
-						<CardActions>
-							<Button onClick={() => this.setExpand(true, post.id)}>
-								view full post
-							</Button>
-						</CardActions>
-					</Card>
-				);
-			});
-		} else {
-			return <h1>no results!</h1>;
-		}
-	} */
 
 	render() {
 		return (
@@ -189,27 +156,37 @@ export default class Latest extends React.Component<Props, State> {
 				) : (
 					<span></span>
 				)}
-				<h3>
-					<u>Latest Posts </u>
-				</h3>
-				<span>
-					<Button onClick={() => this.latestPosts()}>refresh</Button>
+				<span className="latest-filter-span">
+					<Button
+						className="latest-filter-refreshbutton"
+						onClick={() => this.latestPosts()}
+					>
+						refresh
+					</Button>
+					<h3 className="latest-filter-heading">Latest Posts</h3>
+					<span>
+						<FormControl className="latest-filter-select">
+							<InputLabel id="filter-posts">filter</InputLabel>
+							<Select
+								labelId="filter-posts"
+								id="select-filter-posts"
+								value={this.state.filter}
+								onChange={this.handleFilterChange}
+								autoWidth={true}
+							>
+								{this.TagList.map((tag) => {
+									return <MenuItem value={`${tag}`}>{tag}</MenuItem>;
+								})}
+							</Select>
+						</FormControl>
 
-					<FormControl>
-						<InputLabel id="filter-posts">filter</InputLabel>
-						<Select
-							labelId="filter-posts"
-							id="select-filter-posts"
-							value={this.state.filter}
-							onChange={this.handleFilterChange}
-							labelWidth={20}
+						<Button
+							className="latest-filter-selectbutton"
+							onClick={() => this.filterPosts()}
 						>
-							{this.TagList.map((tag) => {
-								return <MenuItem value={`${tag}`}>{tag}</MenuItem>;
-							})}
-						</Select>
-					</FormControl>
-					<Button onClick={() => this.filterPosts()}>search</Button>
+							search
+						</Button>
+					</span>
 				</span>
 
 				<div>

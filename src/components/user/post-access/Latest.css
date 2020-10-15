@@ -1,3 +1,20 @@
 .latest-card {
 	margin: 3em;
 }
+.latest-filter-span {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: stretch;
+	justify-content: space-between;
+}
+.latest-filter-refreshbutton {
+	align-self: normal;
+}
+.latest-filter-select {
+	align-self: normal;
+	width: auto;
+}
+.latest-filter-heading {
+	font-family: "Open Sans", sans-serif;
+	font-size: 3em;
+}

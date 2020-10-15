@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 import Latest from "./Latest";
 
-export default class PostView extends Component<any, any> {
+interface Props {
+	setCoin: (newCoin: string | undefined) => void;
+	setCoinName?: (name: string) => void;
+	currentuser: string | undefined;
+	coin: string | undefined;
+	adminStatus: boolean;
+}
+
+export default class PostView extends Component<Props> {
 	render() {
 		return (
 			<div>

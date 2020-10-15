@@ -17,16 +17,16 @@ import {
 	Switch,
 	Chip,
 } from "@material-ui/core";
+import { Tag } from "../../InterfaceExports";
 import DoneIcon from "@material-ui/icons/Done";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import {
-	Image,
-	Video,
-	Transformation,
-	CloudinaryContext,
-} from "../../CloudinaryTypes";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+
+function Alert(props: AlertProps) {
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -45,26 +45,24 @@ interface State {
 	study: boolean;
 	snackBarToggle: boolean;
 	snackBarMessage: string;
+	snackBarSeverity: "success" | "info" | "warning" | "error" | undefined;
 }
 
 export default class CreatePost extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
-			snackBarToggle: false,
 			postPrivacy: false,
 			challenge: false,
 			solution: false,
 			personal: false,
 			work: false,
 			study: false,
+			snackBarToggle: false,
 			snackBarMessage: "",
+			snackBarSeverity: "success",
 		};
 	}
-	snackClick = () => {
-		let opposite = this.state.snackBarToggle;
-		this.setState({ snackBarToggle: !opposite });
-	};
 	handleSnackClose = (
 		event: React.SyntheticEvent | React.MouseEvent,
 		reason?: string
@@ -79,7 +77,6 @@ export default class CreatePost extends React.Component<Props, State> {
 	handleSwitchChange = () => {
 		let opposite = this.state.postPrivacy;
 		this.setState({ postPrivacy: !opposite });
-		console.log(this.state.postPrivacy);
 	};
 
 	addChip = (chip: string) => {
@@ -112,11 +109,14 @@ export default class CreatePost extends React.Component<Props, State> {
 		privacy: boolean;
 	}) => {
 		if ((values.title.length || values.body.length) === 0) {
-			this.setState({ snackBarMessage: "Title & Body required for post." });
-			return this.snackClick();
+			this.setSnackBar(
+				true,
+				"Please complete both title & body of post.",
+				"error"
+			);
 		} else {
-			let tagSubmit: any[] = [];
-			let tags = [
+			let tagSubmit: string[] = [];
+			let tags: Tag[] = [
 				{ value: this.state.challenge, tagName: "challenge" },
 				{ value: this.state.solution, tagName: "solution" },
 				{ value: this.state.personal, tagName: "personal" },
@@ -146,16 +146,25 @@ export default class CreatePost extends React.Component<Props, State> {
 			});
 			let json = await result.json();
 			if (json.error) {
-				this.setState({ snackBarMessage: "Error while publishing post" });
-				this.snackClick();
+				this.setSnackBar(true, "Error publishing post", "error");
 			} else {
-				//this.clearForm();
-				this.setState({ snackBarMessage: "Post created!" });
-				this.snackClick();
+				this.clearForm();
+				this.setSnackBar(true, "Post created!", "success");
 			}
 			this.props.latestPosts();
 		}
 	};
+
+	setSnackBar = (
+		value: boolean,
+		message: string,
+		severity: "success" | "info" | "warning" | "error" | undefined
+	) => {
+		this.setState({ snackBarSeverity: severity });
+		this.setState({ snackBarMessage: message });
+		this.setState({ snackBarToggle: value });
+	};
+
 	clearForm = () => {
 		this.setState({
 			challenge: false,
@@ -169,6 +178,37 @@ export default class CreatePost extends React.Component<Props, State> {
 	render() {
 		return (
 			<Box>
+				<div>
+					<Snackbar
+						anchorOrigin={{
+							vertical: "bottom",
+							horizontal: "left",
+						}}
+						open={this.state.snackBarToggle}
+						autoHideDuration={6000}
+						onClose={() => this.setState({ snackBarToggle: false })}
+						message={this.state.snackBarMessage}
+						action={
+							<React.Fragment>
+								<IconButton
+									size="small"
+									aria-label="close"
+									color="inherit"
+									onClick={() => this.setState({ snackBarToggle: false })}
+								>
+									<CloseIcon fontSize="small" />
+								</IconButton>
+							</React.Fragment>
+						}
+					>
+						<Alert
+							onClose={() => this.setState({ snackBarToggle: false })}
+							severity={this.state.snackBarSeverity}
+						>
+							{this.state.snackBarMessage}
+						</Alert>
+					</Snackbar>
+				</div>
 				<Formik
 					initialValues={{ title: "", body: "", privacy: false }}
 					onSubmit={(
@@ -176,7 +216,6 @@ export default class CreatePost extends React.Component<Props, State> {
 						{ setSubmitting, setErrors, setStatus, resetForm }
 					) => {
 						this.postPost(values);
-						resetForm({});
 					}}
 				>
 					{({
@@ -190,7 +229,6 @@ export default class CreatePost extends React.Component<Props, State> {
 						values,
 					}) => (
 						<Form className="post-form-box">
-							<label htmlFor="title">Title</label>
 							<TextField
 								id="title"
 								name="title"
@@ -198,10 +236,15 @@ export default class CreatePost extends React.Component<Props, State> {
 								onChange={handleChange}
 								onBlur={handleBlur}
 								value={values.title || ""}
+								fullWidth={true}
 							/>
 							<br />
-							<label htmlFor="body">Post </label>
+							<br />
 							<TextField
+								fullWidth={true}
+								multiline
+								rows={4}
+								variant="outlined"
 								id="body"
 								name="body"
 								placeholder="enter post here..."
@@ -210,56 +253,76 @@ export default class CreatePost extends React.Component<Props, State> {
 								value={values.body || ""}
 							/>
 							<br />
-							<div>
-								<Chip
-									label="challenge"
-									onClick={() => this.addChip("challenge")}
-									deleteIcon={<DoneIcon />}
-									color={this.state.challenge ? "primary" : "default"}
+							<span>
+								<span className="createpost-tags-span">
+									<span className="createpost-tags-tag">
+										<Chip
+											clickable={true}
+											label="challenge"
+											onClick={() => this.addChip("challenge")}
+											deleteIcon={<DoneIcon />}
+											color={this.state.challenge ? "primary" : "default"}
+										/>
+									</span>
+									<span className="createpost-tags-tag">
+										<Chip
+											clickable={true}
+											className="createpost-tags-tag"
+											label="solution"
+											onClick={() => this.addChip("solution")}
+											deleteIcon={<DoneIcon />}
+											color={this.state.solution ? "primary" : "default"}
+										/>
+									</span>
+									<span className="createpost-tags-tag">
+										<Chip
+											clickable={true}
+											className="createpost-tags-tag"
+											label="personal"
+											onClick={() => this.addChip("personal")}
+											deleteIcon={<DoneIcon />}
+											color={this.state.personal ? "primary" : "default"}
+										/>
+									</span>
+									<span className="createpost-tags-tag">
+										<Chip
+											clickable={true}
+											className="createpost-tags-tag"
+											label="work"
+											onClick={() => this.addChip("work")}
+											deleteIcon={<DoneIcon />}
+											color={this.state.work ? "primary" : "default"}
+										/>
+									</span>
+									<span className="createpost-tags-tag">
+										<Chip
+											clickable={true}
+											className="createpost-tags-tag"
+											label="study"
+											onClick={() => this.addChip("study")}
+											deleteIcon={<DoneIcon />}
+											color={this.state.study ? "primary" : "default"}
+										/>
+									</span>
+								</span>
+								<FormControlLabel
+									control={
+										<Switch
+											className="createpost-switch"
+											id="privacy"
+											name="privacy"
+											color="primary"
+											onChange={this.handleSwitchChange}
+											onBlur={handleBlur}
+											placeholder="false"
+										/>
+									}
+									label="Private?"
 								/>
-								<Chip
-									label="solution"
-									onClick={() => this.addChip("solution")}
-									deleteIcon={<DoneIcon />}
-									color={this.state.solution ? "primary" : "default"}
-								/>
-								<Chip
-									label="personal"
-									onClick={() => this.addChip("personal")}
-									deleteIcon={<DoneIcon />}
-									color={this.state.personal ? "primary" : "default"}
-								/>
-								<Chip
-									label="work"
-									onClick={() => this.addChip("work")}
-									deleteIcon={<DoneIcon />}
-									color={this.state.work ? "primary" : "default"}
-								/>
-								<Chip
-									label="study"
-									onClick={() => this.addChip("study")}
-									deleteIcon={<DoneIcon />}
-									color={this.state.study ? "primary" : "default"}
-								/>
-							</div>
-							<br />
-							<FormControlLabel
-								control={
-									<Switch
-										id="privacy"
-										name="privacy"
-										color="primary"
-										onChange={this.handleSwitchChange}
-										onBlur={handleBlur}
-										placeholder="false"
-									/>
-								}
-								label="Private?"
-							/>
-							<br />
-
-							<br />
-							<Button type="submit">Submit</Button>
+							</span>
+							<span className="createpost-submit">
+								<Button type="submit">Submit</Button>
+							</span>
 						</Form>
 					)}
 				</Formik>
