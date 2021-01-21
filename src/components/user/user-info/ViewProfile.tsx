@@ -58,7 +58,7 @@ export default class ViewProfile extends Component<Props, State> {
 		});
 		let json = await response.json();
 		this.setState({ user: json.user });
-		console.log("user set: ", json.user);
+		//console.log("user set: ", json.user);
 	};
 	profileFetch = async () => {
 		let response = await fetch(`${APIURL}/profile/view`, {

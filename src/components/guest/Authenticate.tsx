@@ -1,17 +1,5 @@
-import {
-	Button,
-	Dialog,
-	FormGroup,
-	InputLabel,
-	Slide,
-	TextField,
-} from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import Snackbar from "@material-ui/core/Snackbar";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { Button, Dialog, FormGroup, Slide, TextField } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
-import CloseIcon from "@material-ui/icons/Close";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Form, Formik } from "formik";
 import React from "react";
 import APIURL from "../../helpers/environment";

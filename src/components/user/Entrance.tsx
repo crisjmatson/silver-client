@@ -1,7 +1,7 @@
-import { Button, Container } from "@material-ui/core";
+//import { Button, Container } from "@material-ui/core";
 import * as React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import Navigation from "./Navigation";
+//import Navigation from "./Navigation";
 import Nav from './Nav'
 
 interface Props {

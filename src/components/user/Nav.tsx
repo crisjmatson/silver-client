@@ -1,28 +1,22 @@
-import React, { Component } from "react";
 import {
 	AppBar,
 	Button,
 	Container,
-	Fade,
-	Menu,
-	MenuItem,
 	Toolbar,
 	Typography,
 } from "@material-ui/core";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import GrainIcon from "@material-ui/icons/Grain";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HomeIcon from "@material-ui/icons/Home";
-import WhatshotIcon from "@material-ui/icons/Whatshot";
-import { Link, Route, Switch, Redirect } from "react-router-dom";
+import MenuIcon from "@material-ui/icons/Menu";
+import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import SpeakerNotesIcon from "@material-ui/icons/SpeakerNotes";
+import React, { Component } from "react";
+import { Link, Redirect, Route, Switch } from "react-router-dom";
+import Home from "./home/Home";
+import "./Nav.css";
 import PostView from "./post-access/PostView";
 import ViewProfile from "./user-info/ViewProfile";
-import Home from "./home/Home";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import "./Nav.css";
-import PermIdentityIcon from "@material-ui/icons/PermIdentity";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import MenuIcon from "@material-ui/icons/Menu";
-import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;

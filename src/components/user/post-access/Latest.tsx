@@ -1,23 +1,20 @@
 import {
 	Button,
 	Card,
-	CardActions,
 	CardContent,
-	Typography,
 	FormControl,
 	InputLabel,
-	Select,
 	MenuItem,
+	Select,
+	Typography,
 } from "@material-ui/core";
-import Chip from "@material-ui/core/Chip/Chip";
 import * as React from "react";
 import APIURL from "../../../helpers/environment";
+import { Post } from "../../InterfaceExports";
 import CreatePost from "./CreatePost";
 import ExpandPost from "./ExpandPost";
 import "./Latest.css";
-import { Post } from "../../InterfaceExports";
 import PostDisplay from "./PostDisplay";
-import { addSyntheticLeadingComment } from "typescript";
 
 interface Props {
 	setCoin: (newCoin: string | undefined) => void;
@@ -90,7 +87,7 @@ export default class Latest extends React.Component<Props, State> {
 		let sorted = this.sortRecent(json.posts);
 		this.setState({ recent: sorted });
 		this.setState({ filter: "" });
-		console.log("latest posts pulled", sorted);
+		//console.log("latest posts pulled", sorted);
 	};
 
 	filterPosts = async () => {
@@ -110,6 +107,7 @@ export default class Latest extends React.Component<Props, State> {
 				if (tag.tags.includes(`${this.state.filter}`) === true) {
 					tagged.push(tag);
 				}
+				return "  ";
 			});
 			this.setState({ recent: tagged });
 		}
@@ -175,7 +173,11 @@ export default class Latest extends React.Component<Props, State> {
 								autoWidth={true}
 							>
 								{this.TagList.map((tag) => {
-									return <MenuItem value={`${tag}`}>{tag}</MenuItem>;
+									return (
+										<MenuItem key={this.TagList.indexOf(tag)} value={`${tag}`}>
+											{tag}
+										</MenuItem>
+									);
 								})}
 							</Select>
 						</FormControl>

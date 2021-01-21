@@ -1,28 +1,21 @@
-import * as React from "react";
-import {
-	Formik,
-	FormikHelpers,
-	FormikProps,
-	Form,
-	Field,
-	FieldProps,
-} from "formik";
-import APIURL from "../../../helpers/environment";
-import "./CreatePost.css";
 import {
 	Box,
 	Button,
-	TextField,
+	Chip,
 	FormControlLabel,
 	Switch,
-	Chip,
+	TextField,
 } from "@material-ui/core";
-import { Tag } from "../../InterfaceExports";
-import DoneIcon from "@material-ui/icons/Done";
-import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
+import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
+import DoneIcon from "@material-ui/icons/Done";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import { Form, Formik } from "formik";
+import * as React from "react";
+import APIURL from "../../../helpers/environment";
+import { Tag } from "../../InterfaceExports";
+import "./CreatePost.css";
 
 function Alert(props: AlertProps) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -127,6 +120,7 @@ export default class CreatePost extends React.Component<Props, State> {
 				if (tag.value === true) {
 					tagSubmit.push(tag.tagName);
 				}
+				return "  ";
 			});
 			let postBody = {
 				post: {

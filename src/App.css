@@ -18,7 +18,9 @@ font-family: 'Oleo Script Swash Caps', cursive; -- script font
 }
 .landing-auth-div {
 	background-image: url("https://images.unsplash.com/photo-1531498860502-7c67cf02f657?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80");
-	background-size: 100%;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
 	background-color: blue;
 	text-align: center;
 	justify-content: center;
@@ -28,7 +30,7 @@ font-family: 'Oleo Script Swash Caps', cursive; -- script font
 }
 .landing-logo-img {
 	padding-top: 5em;
-	width: 80%;
+	width: 80vw;
 }
 .landing-logo-button {
 	margin: 5em;

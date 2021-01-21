@@ -1,6 +1,4 @@
 import {
-	Accordion,
-	AccordionDetails,
 	AccordionSummary,
 	Button,
 	Card,
@@ -118,9 +116,9 @@ export default class AllPosts extends React.Component {
 						<Card key={post.id} className="guestpost-Card">
 							<CardContent>
 								<List>
-									<Typography>
-										<h1 className="allpost-title">{post.title}</h1>{" "}
-									</Typography>
+									<div>
+										<p className="allpost-title">{post.title}</p>{" "}
+									</div>
 									<Typography color="textSecondary">
 										{post.author}
 										{" - "}

@@ -93,28 +93,30 @@ export default class Account extends Component<Props, State> {
 						<Card>
 							<CardActionArea>
 								<CardContent>
-									<Typography gutterBottom variant="h5" component="h2">
+									<Typography gutterBottom variant="h5" component="div">
 										Name: {this.props.currentuser}
 									</Typography>
 									<Typography
 										variant="body2"
 										color="textSecondary"
-										component="p"
+										component="div"
 									>
-										<ul>
-											<li>email -{this.props.account.email}</li>
-											<li>
-												joined -{" "}
-												{this.reformatDate(this.props.account.createdAt)}
-											</li>
-											<li>
-												status -
-												{this.props.profile.grad_status == ""
-													? "not available"
-													: this.props.profile.grad_status}
-											</li>
-											<li>graduated - {this.props.profile.date_graduated}</li>
-										</ul>
+										<div>
+											<ul>
+												<li>email -{this.props.account.email}</li>
+												<li>
+													joined -{" "}
+													{this.reformatDate(this.props.account.createdAt)}
+												</li>
+												<li>
+													status -
+													{this.props.profile.grad_status === ""
+														? "not available"
+														: this.props.profile.grad_status}
+												</li>
+												<li>graduated - {this.props.profile.date_graduated}</li>
+											</ul>
+										</div>
 									</Typography>
 								</CardContent>
 							</CardActionArea>

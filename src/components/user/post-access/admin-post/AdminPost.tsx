@@ -1,14 +1,13 @@
 import {
-	DialogTitle,
 	Button,
 	DialogContent,
 	DialogContentText,
-	DialogActions,
+	DialogTitle
 } from "@material-ui/core";
-import { Formik, Form, Field } from "formik";
+import { Field, Form, Formik } from "formik";
 import React, { Component } from "react";
 import APIURL from "../../../../helpers/environment";
-import { Post, Comment } from "../../../InterfaceExports";
+import { Comment, Post } from "../../../InterfaceExports";
 
 interface Props {
 	post: Post;

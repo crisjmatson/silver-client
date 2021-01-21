@@ -1,19 +1,18 @@
 import {
-	Card,
-	CardContent,
-	Typography,
-	Chip,
-	CardActions,
 	Button,
-	Divider,
+	Card,
+	CardActions,
+	CardContent,
+	Chip,
 	ListItem,
 	ListItemAvatar,
 	ListItemText,
+	Typography,
 } from "@material-ui/core";
+import PersonIcon from "@material-ui/icons/Person";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
-import { Post, Comment } from "../../InterfaceExports";
-import PersonIcon from "@material-ui/icons/Person";
+import { Comment, Post } from "../../InterfaceExports";
 
 interface Props {
 	coin: string | undefined;
@@ -121,15 +120,15 @@ export default class ViewPosts extends Component<Props, State> {
 									<Typography color="textSecondary">
 										{post.author}, {this.reformatDate(post.createdAt)}
 									</Typography>
-									<Typography variant="body2" component="p">
+									<Typography variant="body2" component="div">
 										{post.body}
 									</Typography>
-									<Typography variant="body2" component="p">
+									<Typography variant="body2" component="div">
 										{post.tags.map((tag) => {
 											return (
-												<span key={tag}>
+												<div key={tag}>
 													<Chip label={tag} />
-												</span>
+												</div>
 											);
 										})}
 									</Typography>

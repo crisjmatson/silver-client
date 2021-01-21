@@ -1,12 +1,11 @@
 import {
-	FormGroup,
-	TextField,
 	Button,
 	DialogContent,
-	DialogTitle,
-	DialogContentText,
+
+	DialogContentText, DialogTitle, FormGroup,
+	TextField
 } from "@material-ui/core";
-import { Formik, Form } from "formik";
+import { Form, Formik } from "formik";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
 import "./EditPost.css";
@@ -45,22 +44,6 @@ interface Props {
 }
 
 export default class EditPost extends Component<Props> {
-	constructor(props: Props) {
-		super(props);
-		/* post = {
-			author: "",
-			body: "",
-			createdAt: "",
-			edited: false,
-			id: 0,
-			private: false,
-			tags: [],
-			title: "",
-			updatedAt: "",
-			userId: 0,
-		}; */
-	}
-
 	postEditFetch = (postValues: { title: string; body: string }) => {
 		let title;
 		let body;

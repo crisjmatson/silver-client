@@ -1,5 +1,5 @@
 import { Button, FormGroup, TextField } from "@material-ui/core";
-import { Formik, Form, FormikValues } from "formik";
+import { Formik, Form } from "formik";
 import React, { Component } from "react";
 import APIURL from "../../helpers/environment";
 import "./Authenticate.css";

@@ -1,4 +1,4 @@
-import { Button, Container } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper/Paper";
@@ -126,6 +126,7 @@ export default class App extends React.Component<Props, State> {
 						<div className="landing-auth-div">
 							<img
 								className="landing-logo-img"
+								alt="app title"
 								src="https://user-images.githubusercontent.com/68344211/95797523-bc27a880-0cbd-11eb-9ced-9d845c6bc9a8.png"
 							/>
 							<br />
