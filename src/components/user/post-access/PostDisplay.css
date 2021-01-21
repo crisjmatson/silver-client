@@ -6,7 +6,9 @@
 }
 .postdisplay-title {
 	font-family: "Staatliches", cursive;
-	font-size: larger;
+	font-size: 2em;
+	margin-bottom: -10px;
+	text-align: right;
 }
 .postdisplay-authorfont {
 	font-family: "Open Sans", sans-serif;

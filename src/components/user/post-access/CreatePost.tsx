@@ -226,7 +226,7 @@ export default class CreatePost extends React.Component<Props, State> {
 							<TextField
 								id="title"
 								name="title"
-								placeholder="Title"
+								label="Title"
 								onChange={handleChange}
 								onBlur={handleBlur}
 								value={values.title || ""}
@@ -241,7 +241,7 @@ export default class CreatePost extends React.Component<Props, State> {
 								variant="outlined"
 								id="body"
 								name="body"
-								placeholder="enter post here..."
+								label="enter post here..."
 								onChange={handleChange}
 								onBlur={handleBlur}
 								value={values.body || ""}
@@ -298,24 +298,28 @@ export default class CreatePost extends React.Component<Props, State> {
 											color={this.state.study ? "primary" : "default"}
 										/>
 									</span>
+									<FormControlLabel
+										control={
+											<Switch
+												className="createpost-switch"
+												id="privacy"
+												name="privacy"
+												color="primary"
+												onChange={this.handleSwitchChange}
+												onBlur={handleBlur}
+												placeholder="false"
+											/>
+										}
+										label="Private?"
+									/>
+									<span className="createpost-submit">
+										<Button type="submit" variant="outlined">
+											Submit
+										</Button>
+									</span>
 								</span>
-								<FormControlLabel
-									control={
-										<Switch
-											className="createpost-switch"
-											id="privacy"
-											name="privacy"
-											color="primary"
-											onChange={this.handleSwitchChange}
-											onBlur={handleBlur}
-											placeholder="false"
-										/>
-									}
-									label="Private?"
-								/>
-							</span>
-							<span className="createpost-submit">
-								<Button type="submit">Submit</Button>
+								<br />
+								<hr />
 							</span>
 						</Form>
 					)}

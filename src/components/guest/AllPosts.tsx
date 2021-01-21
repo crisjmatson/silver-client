@@ -4,21 +4,34 @@ import {
 	Card,
 	CardActions,
 	CardContent,
-	Container,
-	Typography,
+	Divider,
 	List,
 	ListItem,
-	ListItemText,
 	ListItemAvatar,
-	Divider,
+	ListItemText,
+	Typography,
 } from "@material-ui/core";
+import Chip from "@material-ui/core/Chip/Chip";
+import PersonIcon from "@material-ui/icons/Person";
+import Radium from "radium";
 import * as React from "react";
 import APIURL from "../../helpers/environment";
 import { Comment, Post } from "../InterfaceExports";
 import "./AllPosts.css";
-import PersonIcon from "@material-ui/icons/Person";
-import Chip from "@material-ui/core/Chip/Chip";
-import "./AllPosts.css";
+
+const style = {
+	backgroundImage:
+		'url("https://images.unsplash.com/photo-1494067329533-4385a4867cd4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80")',
+	card: {
+		margin: "8%",
+	},
+	latestHeading: {
+		fontSize: "90px",
+		padding: ".5em .5em .5em 2em",
+		marginBottom: "-1em",
+		textShadow: "10px 10px black",
+	},
+};
 
 interface State {
 	panel: string;
@@ -29,7 +42,7 @@ interface State {
 	currentPost: number;
 }
 
-export default class AllPosts extends React.Component {
+class AllPosts extends React.Component {
 	reformatDate(rawDate: string) {
 		let month = rawDate.slice(5, 7);
 		let day = rawDate.slice(8, 10);
@@ -109,11 +122,13 @@ export default class AllPosts extends React.Component {
 
 	render() {
 		return (
-			<Container className="guestpost-main">
-				<h1 className="guestpost-heading">LATEST POSTS: </h1>
+			<div className="guestpost-main" style={style}>
+				<h1 className="guestpost-heading" style={style.latestHeading}>
+					LATEST POSTS:{" "}
+				</h1>
 				{this.state.list.map((post: Post) => {
 					return (
-						<Card key={post.id} className="guestpost-Card">
+						<Card key={post.id} className="guestpost-Card" style={style.card}>
 							<CardContent>
 								<List>
 									<div>
@@ -162,7 +177,7 @@ export default class AllPosts extends React.Component {
 									) : this.state.commentToggle &&
 									  this.state.currentPost === post.id &&
 									  this.state.comments.length === 0 ? (
-										<span>
+										<span className="allpost-emptyComment">
 											<br />
 											no comments
 										</span>
@@ -214,7 +229,9 @@ export default class AllPosts extends React.Component {
 						</Card>
 					);
 				})}
-			</Container>
+			</div>
 		);
 	}
 }
+
+export default Radium(AllPosts);

@@ -1,8 +1,23 @@
 import { Button, FormGroup, TextField } from "@material-ui/core";
-import { Formik, Form } from "formik";
+import { Form, Formik } from "formik";
+import Radium from "radium";
 import React, { Component } from "react";
 import APIURL from "../../helpers/environment";
 import "./Authenticate.css";
+
+const style = {
+	formDialog: {
+		width: "400px",
+		padding: "6vw",
+	},
+	formInput: {
+		width: "80%",
+	},
+	denial: {
+		fontFamily: "'Staatliches', cursive",
+		color: "red",
+	},
+};
 
 interface Props {
 	closeAdmin: () => void;
@@ -26,7 +41,7 @@ interface State {
 	denial: boolean;
 }
 
-export default class AdminAuth extends Component<Props, State> {
+class AdminAuth extends Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
@@ -128,7 +143,7 @@ export default class AdminAuth extends Component<Props, State> {
 
 	render() {
 		return (
-			<div className="authenticate-formik">
+			<div className="authenticate-formik" style={style.formDialog}>
 				<FormGroup>
 					<Formik
 						initialValues={{
@@ -143,10 +158,15 @@ export default class AdminAuth extends Component<Props, State> {
 					>
 						{({ values, handleChange, handleBlur }) => (
 							<Form className="authenticate-formik-form">
-								{this.state.denial ? <p>access denied</p> : <p></p>}
+								{this.state.denial ? (
+									<p style={style.denial}>access denied</p>
+								) : (
+									<p></p>
+								)}
 								{this.state.signToggle ? (
 									<div>
 										<TextField
+											required
 											label="authorization"
 											className="authenticate-formik-input"
 											name="authorization"
@@ -157,9 +177,11 @@ export default class AdminAuth extends Component<Props, State> {
 										/>
 										<br />
 										<TextField
+											required
 											label="email"
 											className="authenticate-formik-input"
 											name="email"
+											type="email"
 											value={values.email}
 											onChange={handleChange}
 											onBlur={handleBlur}
@@ -171,6 +193,7 @@ export default class AdminAuth extends Component<Props, State> {
 								)}
 								<div>
 									<TextField
+										required
 										label="username"
 										className="authenticate-formik-input"
 										name="username"
@@ -182,9 +205,11 @@ export default class AdminAuth extends Component<Props, State> {
 								</div>
 								<div>
 									<TextField
+										required
 										label="password"
 										className="authenticate-formik-input"
 										name="password"
+										type="password"
 										value={values.password}
 										onChange={handleChange}
 										onBlur={handleBlur}
@@ -218,3 +243,4 @@ export default class AdminAuth extends Component<Props, State> {
 		);
 	}
 }
+export default Radium(AdminAuth);

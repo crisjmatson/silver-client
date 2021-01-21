@@ -10,8 +10,24 @@ import "./App.css";
 import AllPosts from "./components/guest/AllPosts";
 import Auth from "./components/guest/Authenticate";
 import Entrance from "./components/user/Entrance";
-//import StyleTest from "./StyleTest";
-//import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import Radium from "radium";
+
+/* STYLING */
+
+const style = {
+	color: "rgba(7, 34, 121, 0.913)",
+	fontSize: "2em",
+	backgroundColor: "rgba(246, 246, 255, 0.744)",
+	border: "thin solid transparent",
+	marginBottom: "3em",
+	triobox: {
+		margin: "-5%",
+		paddingRight: "5em",
+		paddingLeft: "5em",
+	},
+};
+
+/* APP FUNCTION */
 
 function Alert(props: AlertProps) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -28,7 +44,7 @@ interface State {
 }
 interface Props {}
 
-export default class App extends React.Component<Props, State> {
+class App extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
@@ -125,13 +141,15 @@ export default class App extends React.Component<Props, State> {
 						)}
 						<div className="landing-auth-div">
 							<img
+								alt="wesch logo"
 								className="landing-logo-img"
 								alt="app title"
 								src="https://user-images.githubusercontent.com/68344211/95797523-bc27a880-0cbd-11eb-9ced-9d845c6bc9a8.png"
 							/>
 							<br />
 							<Button
-								className="landing-logo-button"
+								style={style}
+								/* className="landing-logo-button" */
 								onClick={() => this.toggleAuth()}
 								variant="outlined"
 								color="inherit"
@@ -139,7 +157,7 @@ export default class App extends React.Component<Props, State> {
 								click to login
 							</Button>
 						</div>
-						<div className="landing-box-trio">
+						<div className="landing-box-trio" style={style.triobox}>
 							<Grid
 								container
 								spacing={8}
@@ -147,22 +165,25 @@ export default class App extends React.Component<Props, State> {
 								className="landing-box-trio-grid"
 							>
 								<Grid item xs={4}>
-									<Paper className="box-trio">
-										<h3 className="landing-box-trio-title">prospect</h3>
-										receive insight to the unique challenges in learning to
-										code, and view challenges & completed projects by alumni.
-									</Paper>
-								</Grid>
-								<Grid item xs={4}>
-									<Paper className="box-trio">
-										<h3 className="landing-box-trio-title">current</h3>
+									<Paper className="box-trio" elevation={22}>
+										<p className="landing-box-trio-title">CURRENT</p>
+										<hr />
 										reach out for help on tough concepts & engage with other
 										coding students facing similar struggles.
 									</Paper>
 								</Grid>
 								<Grid item xs={4}>
-									<Paper className="box-trio">
-										<h3 className="landing-box-trio-title">alumni</h3>
+									<Paper className="box-trio" elevation={22}>
+										<p className="landing-box-trio-title">PROSPECT</p>
+										<hr />
+										receive insight to the unique challenges in learning to
+										code, and view challenges & completed projects by alumni.
+									</Paper>
+								</Grid>
+								<Grid item xs={4}>
+									<Paper className="box-trio" elevation={22}>
+										<p className="landing-box-trio-title">ALUMNI</p>
+										<hr />
 										assist others to reinforce & deepen personal knowledge,
 										shares current ongoing & completed projects.
 									</Paper>
@@ -186,3 +207,4 @@ export default class App extends React.Component<Props, State> {
 		);
 	}
 }
+export default Radium(App);
