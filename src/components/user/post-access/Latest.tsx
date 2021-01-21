@@ -93,7 +93,7 @@ class Latest extends React.Component<Props, State> {
 		let sorted = this.sortRecent(json.posts);
 		this.setState({ recent: sorted });
 		this.setState({ filter: "" });
-		console.log("latest posts pulled", sorted);
+		//console.log("latest posts pulled", sorted);
 	};
 
 	filterPosts = async () => {
@@ -113,6 +113,7 @@ class Latest extends React.Component<Props, State> {
 				if (tag.tags.includes(`${this.state.filter}`) === true) {
 					tagged.push(tag);
 				}
+				return "  ";
 			});
 			this.setState({ recent: tagged });
 		}
@@ -178,7 +179,11 @@ class Latest extends React.Component<Props, State> {
 								autoWidth={true}
 							>
 								{this.TagList.map((tag) => {
-									return <MenuItem value={`${tag}`}>{tag}</MenuItem>;
+									return (
+										<MenuItem key={this.TagList.indexOf(tag)} value={`${tag}`}>
+											{tag}
+										</MenuItem>
+									);
 								})}
 							</Select>
 						</FormControl>

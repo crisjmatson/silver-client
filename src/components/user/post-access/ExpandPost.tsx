@@ -145,7 +145,7 @@ class ExpandPost extends Component<Props, State> {
 	setResults = (post: Post, comments: Comment[]) => {
 		this.setState({ post: post });
 		this.setState({ comments: comments });
-		console.log(this.state);
+		//console.log(this.state);
 	};
 
 	commentPost = (entry: string) => {
@@ -156,7 +156,7 @@ class ExpandPost extends Component<Props, State> {
 				private: false,
 			},
 		};
-		console.log(submission);
+		//console.log(submission);
 
 		fetch(`${APIURL}/comment`, {
 			method: "POST",
@@ -168,7 +168,7 @@ class ExpandPost extends Component<Props, State> {
 		}).then(() => this.postFetch());
 	};
 	commentEditFetch = (entry: { entry: string }, commentSelect: number) => {
-		console.log(entry.entry);
+		//console.log(entry.entry);
 		let submission = {
 			comment: {
 				body: entry.entry,
@@ -194,7 +194,7 @@ class ExpandPost extends Component<Props, State> {
 				Authorization: `${this.props.coin}`,
 			}),
 		}).then((response) => {
-			console.log(response);
+			//console.log(response);
 			this.postFetch();
 		});
 	};
@@ -282,7 +282,7 @@ class ExpandPost extends Component<Props, State> {
 									<Formik
 										initialValues={{ commentPost: "" }}
 										onSubmit={(values, actions) => {
-											console.log({ values, actions });
+											//console.log({ values, actions });
 											this.commentPost(values.commentPost);
 										}}
 									>
@@ -310,14 +310,14 @@ class ExpandPost extends Component<Props, State> {
 									<List>
 										{this.state.comments.map((comment) => {
 											return (
-												<div>
+												<div key={this.state.comments.indexOf(comment)}>
 													{this.state.commentEdit &&
 													comment.author === this.props.currentuser &&
 													this.state.selectedComment === comment.id ? (
 														<Formik
 															initialValues={{ entry: "" }}
 															onSubmit={(values, actions) => {
-																console.log({ values, actions });
+																//console.log({ values, actions });
 																this.commentEditFetch(values, comment.id);
 															}}
 														>
@@ -375,7 +375,7 @@ class ExpandPost extends Component<Props, State> {
 																<span className="comment-icon">
 																	<Button
 																		onClick={() => {
-																			console.log("heck");
+																			//console.log("heck");
 																		}}
 																	>
 																		{" "}

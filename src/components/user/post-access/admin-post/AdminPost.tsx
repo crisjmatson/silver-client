@@ -2,39 +2,13 @@ import {
 	Button,
 	DialogContent,
 	DialogContentText,
-	DialogTitle,
-	ListItem,
-	ListItemText,
-	Typography,
+	DialogTitle
 } from "@material-ui/core";
 import { Field, Form, Formik } from "formik";
-import Radium from "radium";
 import React, { Component } from "react";
 import APIURL from "../../../../helpers/environment";
 import { Comment, Post } from "../../../InterfaceExports";
 
-const style = {
-	username: { fontFamily: "'Oleo Script Swash Caps', cursive" },
-	adminheader: {
-		fontFamily: "'Staatliches', cursive",
-		fontSize: "1.75em",
-		padding: "1em",
-	},
-	admindelete: {
-		fontFamily: "'Oleo Script Swash Caps', cursive",
-		fontSize: "1.75em",
-	},
-	form: {
-		margin: "1em",
-		width: "30em",
-	},
-	submit: {
-		marginLeft: "80%",
-	},
-	main: {
-		width: "100%",
-	},
-};
 
 interface Props {
 	post: Post;

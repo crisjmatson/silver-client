@@ -22,6 +22,7 @@ interface Props {
 }
 
 export default class PostDisplay extends Component<Props> {
+
 	reformatDate(rawDate: string) {
 		let month = rawDate.slice(5, 7);
 		let day = rawDate.slice(8, 10);
@@ -69,7 +70,7 @@ export default class PostDisplay extends Component<Props> {
 									view full post
 								</Button>
 								<span className="latest-taglist">
-									<p>
+									<div>
 										{post.tags.map((tag) => {
 											return (
 												<span key={tag} className="postTags">
@@ -77,7 +78,7 @@ export default class PostDisplay extends Component<Props> {
 												</span>
 											);
 										})}
-									</p>
+									</div>
 								</span>
 							</CardActions>
 						</Card>

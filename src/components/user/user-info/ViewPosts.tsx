@@ -120,10 +120,18 @@ export default class ViewPosts extends Component<Props, State> {
 									<Typography color="textSecondary">
 										{post.author}, {this.reformatDate(post.createdAt)}
 									</Typography>
-									<Typography variant="body2" component="p">
+									<Typography variant="body2" component="div">
 										{post.body}
 									</Typography>
-
+									<Typography variant="body2" component="div">
+										{post.tags.map((tag) => {
+											return (
+												<div key={tag}>
+													<Chip label={tag} />
+												</div>
+											);
+										})}
+									</Typography>
 									{/* COMMENT DISPLAY */}
 									<Typography>
 										{this.state.currentPost === post.id &&
@@ -157,12 +165,7 @@ export default class ViewPosts extends Component<Props, State> {
 												this.state.currentPost === post.id &&
 												this.state.comments.length === 0) ||
 										  undefined ? (
-											<span>
-												<hr />
-												<ListItem>
-													<Typography>no comments</Typography>
-												</ListItem>
-											</span>
+											<span>no comments</span>
 										) : (
 											<span></span>
 										)}
@@ -178,14 +181,7 @@ export default class ViewPosts extends Component<Props, State> {
 										<Button onClick={() => this.fetchComments(post.id)}>
 											view comments
 										</Button>
-									)}{" "}
-									{post.tags.map((tag) => {
-										return (
-											<span key={tag}>
-												<Chip label={tag} />
-											</span>
-										);
-									})}
+									)}
 								</CardActions>
 							</Card>
 						);

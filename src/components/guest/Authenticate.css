@@ -1,20 +1,35 @@
-.authenticate-formik {
-	text-align: center;
+.authenticate-div {
+	color: white;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-content: center;
 }
-
-/* .authenticate-formik {
+.authenticate-dialog {
+	width: 100vw;
+}
+.authenticate-logo {
+	background-image: url("https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1651&q=80");
+	background-size: cover;
+	width: 100%;
+}
+/* .authenticate-box-trio {
+	margin-left: 5em;
+	margin-right: 5em;
+} */
+.authenticate-formik {
 	width: 50%;
 	height: 50vh;
 	display: flex;
 	flex-flow: column wrap;
 	justify-content: space-around;
 	align-items: center;
+	text-align: center;
 }
 .authenticate-formik-form {
-	width: 45vw;
+	width: 40vw;
 	padding: 2em;
 }
 .authenticate-formik-input {
 	align-self: center;
 }
- */

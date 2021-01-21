@@ -120,6 +120,7 @@ export default class CreatePost extends React.Component<Props, State> {
 				if (tag.value === true) {
 					tagSubmit.push(tag.tagName);
 				}
+				return "  ";
 			});
 			let postBody = {
 				post: {

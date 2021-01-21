@@ -143,6 +143,7 @@ class App extends React.Component<Props, State> {
 							<img
 								alt="wesch logo"
 								className="landing-logo-img"
+								alt="app title"
 								src="https://user-images.githubusercontent.com/68344211/95797523-bc27a880-0cbd-11eb-9ced-9d845c6bc9a8.png"
 							/>
 							<br />
