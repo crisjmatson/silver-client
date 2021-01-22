@@ -6,7 +6,6 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import * as React from "react";
-import "./App.css";
 import AllPosts from "./components/guest/AllPosts";
 import Auth from "./components/guest/Authenticate";
 import Entrance from "./components/user/Entrance";
@@ -14,16 +13,53 @@ import Radium from "radium";
 
 /* STYLING */
 
-const style = {
-	color: "rgba(7, 34, 121, 0.913)",
-	fontSize: "2em",
-	backgroundColor: "rgba(246, 246, 255, 0.744)",
-	border: "thin solid transparent",
-	marginBottom: "3em",
-	triobox: {
-		margin: "-5%",
-		paddingRight: "5em",
-		paddingLeft: "5em",
+const styles = {
+	app: {
+		minWidth: "100vw",
+		backgroundColor: "blue",
+		margin: "0",
+	},
+	logoDiv: {
+		backgroundImage:
+			'url("https://images.unsplash.com/photo-1531498860502-7c67cf02f657?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80")',
+		backgroundSize: "cover",
+		display: "flex",
+		flexFlow: "column wrap",
+		justifyContent: "center",
+		alignItems: "center",
+		minWidth: "100vw",
+	},
+	logoImg: {
+		paddingTop: "5em",
+		width: "80%",
+	},
+	logoBtn: {
+		margin: "1em 5em 5em 5em",
+		width: "48vw",
+		backgroundColor: "rgba(40, 40, 250, 0.8)",
+		border: "thick solid white",
+		color: "white",
+	},
+	boxGridContainer: {
+		padding: "0px",
+		height: "250px",
+		margin: "0",
+		display: "flex",
+		alignItems: "center",
+	},
+	boxGrid: {
+		maxWidth: "100vw",
+		margin: "0",
+		padding: "1vw",
+	},
+	userBox: {
+		height: "auto",
+		minHeight: "40vh",
+		display: "flex",
+		flexFlow: "column wrap",
+		justifyContent: "center",
+		alignItems: "center",
+		padding: "1vw",
 	},
 };
 
@@ -87,8 +123,7 @@ class App extends React.Component<Props, State> {
 
 	render() {
 		return (
-			<div className="App">
-				{/* <StyleTest /> */}
+			<div className="App" style={styles.app}>
 				<div>
 					<Snackbar
 						anchorOrigin={{
@@ -121,9 +156,10 @@ class App extends React.Component<Props, State> {
 					</Snackbar>
 				</div>
 				{this.state.coin === undefined ? (
-					<div className="authenticate-outer-container">
+					<div>
 						{this.state.auth ? (
 							<Auth
+								/* all props */
 								snackbarSeverity={this.state.snackbarSeverity}
 								snackbarToggle={this.state.snackbarToggle}
 								snackbarMessage={this.state.snackbarMessage}
@@ -139,17 +175,15 @@ class App extends React.Component<Props, State> {
 						) : (
 							<span></span>
 						)}
-						<div className="landing-auth-div">
+						<div style={styles.logoDiv}>
 							<img
 								alt="wesch logo"
-								className="landing-logo-img"
-								alt="app title"
+								style={styles.logoImg}
 								src="https://user-images.githubusercontent.com/68344211/95797523-bc27a880-0cbd-11eb-9ced-9d845c6bc9a8.png"
 							/>
 							<br />
 							<Button
-								style={style}
-								/* className="landing-logo-button" */
+								style={styles.logoBtn}
 								onClick={() => this.toggleAuth()}
 								variant="outlined"
 								color="inherit"
@@ -157,39 +191,38 @@ class App extends React.Component<Props, State> {
 								click to login
 							</Button>
 						</div>
-						<div className="landing-box-trio" style={style.triobox}>
-							<Grid
-								container
-								spacing={8}
-								justify="space-around"
-								className="landing-box-trio-grid"
-							>
-								<Grid item xs={4}>
-									<Paper className="box-trio" elevation={22}>
-										<p className="landing-box-trio-title">CURRENT</p>
-										<hr />
+						<Grid container spacing={4} justify="center" style={styles.boxGrid}>
+							<Grid item xs={4}>
+								<Paper style={styles.userBox} elevation={22}>
+									<p>CURRENT</p>
+									<hr style={{ width: "100%", maxWidth: "275px" }} />
+									<p style={{ maxWidth: "300px" }}>
 										reach out for help on tough concepts & engage with other
 										coding students facing similar struggles.
-									</Paper>
-								</Grid>
-								<Grid item xs={4}>
-									<Paper className="box-trio" elevation={22}>
-										<p className="landing-box-trio-title">PROSPECT</p>
-										<hr />
+									</p>
+								</Paper>
+							</Grid>
+							<Grid item xs={4}>
+								<Paper style={styles.userBox} elevation={22}>
+									<p>PROSPECT</p>
+									<hr style={{ width: "100%", maxWidth: "275px" }} />
+									<p style={{ maxWidth: "300px" }}>
 										receive insight to the unique challenges in learning to
 										code, and view challenges & completed projects by alumni.
-									</Paper>
-								</Grid>
-								<Grid item xs={4}>
-									<Paper className="box-trio" elevation={22}>
-										<p className="landing-box-trio-title">ALUMNI</p>
-										<hr />
+									</p>
+								</Paper>
+							</Grid>
+							<Grid item xs={4}>
+								<Paper style={styles.userBox} elevation={22}>
+									<p>ALUMNI</p>
+									<hr style={{ width: "100%", maxWidth: "275px" }} />
+									<p style={{ maxWidth: "300px" }}>
 										assist others to reinforce & deepen personal knowledge,
 										shares current ongoing & completed projects.
-									</Paper>
-								</Grid>
+									</p>
+								</Paper>
 							</Grid>
-						</div>
+						</Grid>
 						<AllPosts />
 					</div>
 				) : (

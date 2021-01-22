@@ -17,19 +17,25 @@ import Radium from "radium";
 import * as React from "react";
 import APIURL from "../../helpers/environment";
 import { Comment, Post } from "../InterfaceExports";
-import "./AllPosts.css";
+//import "./AllPosts.css";
 
-const style = {
+const styles = {
 	backgroundImage:
 		'url("https://images.unsplash.com/photo-1494067329533-4385a4867cd4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80")',
+	paddingBottom: "10vh",
 	card: {
 		margin: "8%",
 	},
 	latestHeading: {
+		margin: "0",
+		color: "white",
 		fontSize: "90px",
-		padding: ".5em .5em .5em 2em",
-		marginBottom: "-1em",
 		textShadow: "10px 10px black",
+		fontFamily: '"Staatliches", cursive',
+	},
+	postTitleFont: {
+		fontFamily: '"Staatliches", cursive',
+		fontSize: '30px',
 	},
 };
 
@@ -122,17 +128,19 @@ class AllPosts extends React.Component {
 
 	render() {
 		return (
-			<div className="guestpost-main" style={style}>
-				<h1 className="guestpost-heading" style={style.latestHeading}>
-					LATEST POSTS:{" "}
-				</h1>
+			<div style={styles}>
+				<div style={{ paddingLeft: "50px", paddingTop: "50px" }}>
+					<div style={styles.latestHeading}>LATEST POSTS: </div>
+				</div>
 				{this.state.list.map((post: Post) => {
 					return (
-						<Card key={post.id} className="guestpost-Card" style={style.card}>
+						<Card key={post.id} className="guestpost-Card" style={styles.card}>
 							<CardContent>
 								<List>
 									<div>
-										<p className="allpost-title">{post.title}</p>{" "}
+										<p style={styles.postTitleFont} className="allpost-title">
+											{post.title}
+										</p>{" "}
 									</div>
 									<Typography color="textSecondary">
 										{post.author}

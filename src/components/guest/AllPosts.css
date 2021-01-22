@@ -1,13 +1,12 @@
-.guestpost-main {
+/* .guestpost-main {
 	background-color: black;
 	padding-bottom: 5em;
-	margin-top: 2em;
 }
 .guestpost-heading {
 	color: white;
 	text-align: left;
 	font-family: "Staatliches", cursive;
-}
+} */
 .guestpost-Card {
 	background-image: url("https://images.unsplash.com/photo-1545431619-92b140e1d334?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80");
 	background-color: rgba(0, 0, 0, 0.105);

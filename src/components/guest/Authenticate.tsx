@@ -5,18 +5,44 @@ import Radium from "radium";
 import React from "react";
 import APIURL from "../../helpers/environment";
 import AdminAuth from "./AdminAuth";
-import "./Authenticate.css";
+//import "./Authenticate.css";
 
-const style = {
+const styles = {
+	authDialog: {
+		width: "100%",
+		display: "flex",
+		justifyContent: "center",
+		alignContent: "center",
+	},
 	formDialog: {
-		width: "400px",
-		padding: "6vw",
+		height: "70vh",
+		width: "100%",
+		display: "flex",
+		flexFlow: "column wrap",
+		justifyContent: "center",
+		alignContent: "center",
+	},
+	formCont: {
+		/* width: "80vw", */
+		padding: '5vw',
+		height: "100%",
+		display: "flex",
+		flexFlow: "column wrap",
+		justifyContent: "center",
+		alignContent: "center",
 	},
 	formInput: {
-		width: "80%",
+		width: "60vw",
+		maxWidth: '500px',
 	},
 	denial: {
 		fontFamily: "'Staatliches', cursive",
+	},
+	authBtnTogg: {
+		display: "flex",
+		flexFlow: "col no-wrap",
+		justifyContent: "center",
+		alignContent: "center",
 	},
 };
 
@@ -126,9 +152,9 @@ class Authenticate extends React.Component<Props, State> {
 
 	render() {
 		return (
-			<div className="authenticate-div">
+			<div>
 				<Dialog
-					className="authenticate-dialog"
+					style={styles.authDialog}
 					TransitionComponent={Transition}
 					open={this.props.auth}
 					onBackdropClick={() => this.props.toggleAuth()}
@@ -149,7 +175,7 @@ class Authenticate extends React.Component<Props, State> {
 							setSnackBar={this.props.setSnackBar}
 						/>
 					) : (
-						<div className="authenticate-formik" style={style.formDialog}>
+						<div style={styles.formDialog}>
 							<FormGroup>
 								<Formik
 									initialValues={{ email: "", username: "", password: "" }}
@@ -160,13 +186,13 @@ class Authenticate extends React.Component<Props, State> {
 									}}
 								>
 									{({ values, handleChange, handleBlur }) => (
-										<Form className="authenticate-formik-form">
+										<Form style={styles.formCont}>
 											{this.state.toggle ? (
 												<div>
 													<TextField
 														required
 														label="email"
-														className="authenticate-formik-input"
+														style={styles.formInput}
 														fullWidth={true}
 														name="email"
 														type="email"
@@ -182,7 +208,7 @@ class Authenticate extends React.Component<Props, State> {
 												<TextField
 													required
 													label="username"
-													className="authenticate-formik-input"
+													style={styles.formInput}
 													name="username"
 													value={values.username}
 													onChange={handleChange}
@@ -194,7 +220,7 @@ class Authenticate extends React.Component<Props, State> {
 												<TextField
 													required
 													label="password"
-													className="authenticate-formik-input"
+													style={styles.formInput}
 													name="password"
 													type="password"
 													value={values.password}
@@ -209,7 +235,7 @@ class Authenticate extends React.Component<Props, State> {
 											<br />
 											<br />
 											<br />
-											<span>
+											<span style={styles.authBtnTogg}>
 												<Button onClick={() => this.toggleSign()}>
 													{this.state.toggle
 														? "back to sign in"

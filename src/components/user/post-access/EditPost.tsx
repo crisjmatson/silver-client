@@ -7,6 +7,7 @@ import {
 	TextField,
 } from "@material-ui/core";
 import { Form, Formik } from "formik";
+import Radium from "radium";
 import React, { Component } from "react";
 import APIURL from "../../../helpers/environment";
 import "./EditPost.css";
@@ -46,7 +47,7 @@ interface Props {
 	postFetch: () => void;
 }
 
-export default class EditPost extends Component<Props> {
+class EditPost extends Component<Props> {
 	postEditFetch = (postValues: { title: string; body: string }) => {
 		let title;
 		let body;

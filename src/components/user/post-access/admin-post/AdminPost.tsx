@@ -2,13 +2,16 @@ import {
 	Button,
 	DialogContent,
 	DialogContentText,
-	DialogTitle
+	DialogTitle,
+	ListItem,
+	ListItemText,
+	Typography,
 } from "@material-ui/core";
 import { Field, Form, Formik } from "formik";
 import React, { Component } from "react";
+import Radium from "radium";
 import APIURL from "../../../../helpers/environment";
 import { Comment, Post } from "../../../InterfaceExports";
-
 
 interface Props {
 	post: Post;
@@ -105,7 +108,7 @@ class AdminPost extends Component<Props, State> {
 	render() {
 		return (
 			<div>
-				<h1 style={style.adminheader}>ADMIN POST EDITING</h1>
+				<h1 /* style={style.adminheader} */>ADMIN POST EDITING</h1>
 				<span>
 					{this.state.admindelete_post ? (
 						<span>
@@ -154,7 +157,9 @@ class AdminPost extends Component<Props, State> {
 						<span>
 							<DialogTitle id="alert-dialog-slide-title">
 								{this.props.post.title} -
-								<span style={style.username}>{this.props.post.author}</span>{" "}
+								<span /* style={style.username} */>
+									{this.props.post.author}
+								</span>{" "}
 								{/* <Button onClick={() => this.setState({ adminedit_post: true })}>
 									edit
 								</Button> */}
@@ -182,7 +187,7 @@ class AdminPost extends Component<Props, State> {
 									{this.state.admindelete_comment &&
 									this.state.currentComment === commentID ? (
 										<span>
-											<p style={style.admindelete}>Delete?</p>
+											<p /* style={style.admindelete} */>Delete?</p>
 											<Button onClick={() => this.deleteCommentAdmin()}>
 												confirm
 											</Button>
@@ -263,46 +268,3 @@ class AdminPost extends Component<Props, State> {
 	}
 }
 export default Radium(AdminPost);
-/* 
-<ListItem key={comment.id} alignItems="flex-start">
-	{comment.author === this.props.currentuser &&
-	this.state.selectedComment !== comment.id ? (
-		<span className="comment-icon">
-			<Button
-				onClick={() =>
-					this.setState({
-						commentEdit: true,
-						selectedComment: comment.id,
-					})
-				}
-			>
-				<EditOutlinedIcon />
-			</Button>
-		</span>
-	) : (
-		<span className="comment-icon">
-			<Button
-				onClick={() => {
-					console.log("heck");
-				}}
-			>
-				{" "}
-				<PersonOutlineRoundedIcon />{" "}
-			</Button>
-		</span>
-	)}
-	<ListItemText
-		className="comment-text"
-		primary={comment.body}
-		secondary={
-			<React.Fragment>
-				<Typography component="span" variant="body2" color="textPrimary">
-					{comment.author}
-				</Typography>
-				{" -- "}
-				{this.reformatDate(comment.updatedAt)}
-			</React.Fragment>
-		}
-	/>
-</ListItem>;
- */
